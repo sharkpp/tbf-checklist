@@ -11,3 +11,8 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // サービスワーカーの詳細: https://bit.ly/CRA-PWA
 
 serviceWorker.unregister();
+
+// 要求スペック
+//   config#onUpdate(registration);
+//   config#onSuccess(registration);
+// serviceWorker.register(config);
