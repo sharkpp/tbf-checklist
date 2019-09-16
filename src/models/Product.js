@@ -91,6 +91,12 @@ export default class ProductModel {
   }
 
   // 製品を取得
+  getProductOrder(circleId, productId) {
+    const orderBySeq = this._store.orderBy.seq[circleId] || [];
+    return orderBySeq ? orderBySeq.indexOf(productId) : -1;
+  }
+
+  // 製品を取得
   getProductList(circleId) {
     const products = this._store.products[circleId];
     return products && Object.keys(products);
