@@ -10,6 +10,7 @@ import './index.css';
 
 import CircleModel from './models/Circle';
 import ProductModel from './models/Product';
+import FavoriteModel from './models/Favorite';
 
 import App from './App';
 
@@ -17,6 +18,7 @@ import App from './App';
 const models = {
   circle:  new CircleModel(),
   product: new ProductModel(),
+  favorite: new FavoriteModel(),
 };
 
 models.circle.request();
