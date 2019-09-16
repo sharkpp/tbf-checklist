@@ -1,3 +1,5 @@
+"use struct";
+
 // このオプションのコードは、Service Workerを登録するために使用されます。
 // register() はデフォルトでは呼び出されません。
 

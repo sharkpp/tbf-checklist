@@ -1,25 +1,50 @@
+"use struct";
+
 import React from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
+import EventSelectView  from './views/EventSelect';
+import CircleSelectView from './views/CircleSelect';
 
-function App() {
+function App({ models }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about/">About</Link>
+            </li>
+            <li>
+              <Link to="/users/">Users</Link>
+            </li>
+          </ul>
+        </nav>
+
+        <Route
+          path="/" exact
+          render={(router) => 
+            <EventSelectView
+              models={models}
+              history={router.history}
+              params={router.match.params}
+            />}
+        />
+        <Route
+          path="/:event/circle/:circleId?" exact
+          render={(router) => 
+            <CircleSelectView
+              models={models}
+              history={router.history}
+              params={router.match.params}
+            />}
+        />
+      </div>
+    </Router>
   );
 }
 
