@@ -58,13 +58,15 @@ export default class ProductModel {
 
           console.log('ProductModel request',data);
 
-          for (let i = 0, productInfo; productInfo = data.list[i]; ++i) {
-            // サークル情報更新
-            const circleId = productInfo.circleExhibitInfoID;
-            this._store.products[circleId] = this._store.products[circleId] || {};
-            this._store.products[circleId][productInfo.id] = productInfo;
-            this._store.orderBy.seq[circleId] = this._store.orderBy.seq[circleId] || [];
-            this._store.orderBy.seq[circleId][productInfo.seq-1] = productInfo.id;
+          if (data.list) {
+            for (let i = 0, productInfo; productInfo = data.list[i]; ++i) {
+              // サークル情報更新
+              const circleId = productInfo.circleExhibitInfoID;
+              this._store.products[circleId] = this._store.products[circleId] || {};
+              this._store.products[circleId][productInfo.id] = productInfo;
+              this._store.orderBy.seq[circleId] = this._store.orderBy.seq[circleId] || [];
+              this._store.orderBy.seq[circleId][productInfo.seq-1] = productInfo.id;
+            }
           }
 
           this._event.emit('change');
