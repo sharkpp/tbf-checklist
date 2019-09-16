@@ -12,7 +12,7 @@ import Card from 'react-bootstrap/Card'
 import Badge from 'react-bootstrap/Badge'
 
 
-function ItemCard({ circleInfo, productInfo }) {console.log('ItemCard', circleInfo, productInfo);
+function CircleCard({ circleInfo }) {
   return (
     <div className='item-frame'>
       <Card >
@@ -20,9 +20,28 @@ function ItemCard({ circleInfo, productInfo }) {console.log('ItemCard', circleIn
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
           {circleInfo.name||' '}
         </Card.Header>
-        {productInfo.name && <Card.Header>
+        <Card.Body>
+          <Card.Title></Card.Title>
+          <Card.Text>
+          {circleInfo.id}
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    </div>
+  );
+}
+
+function ProductCard({ circleInfo, productInfo }) {
+  return (
+    <div className='item-frame'>
+      <Card >
+        <Card.Header>
+          <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
+          {circleInfo.name||' '}
+        </Card.Header>
+        <Card.Header>
           {productInfo.name||' '}
-        </Card.Header>}
+        </Card.Header>
         <Card.Body>
           <Card.Title></Card.Title>
           <Card.Text>
@@ -151,11 +170,17 @@ function CircleSelectView({ models, history, params }) {
                       const productInfo_ = productInfo && productInfo.id ==  productId_ ? productInfo : { id: productId_ };
                       return (
                         <Slide key={`_${circleId_}_${productId}_${index}`} index={index}>
-                          <ItemCard
-                            key={`_${circleId_}_${productId}_item_${index}`}
-                            circleInfo={circleInfo_}
-                            productInfo={productInfo_}
-                          />
+                          {!productInfo_.name
+                            ? <CircleCard
+                                key={`_${circleId_}_${productId}_item_${index}`}
+                                circleInfo={circleInfo_}
+                              />
+                            : <ProductCard
+                                key={`_${circleId_}_${productId}_item_${index}`}
+                                circleInfo={circleInfo_}
+                                productInfo={productInfo_}
+                              />
+                          }
                         </Slide>
                       );
                     })}
