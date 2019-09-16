@@ -1,29 +1,85 @@
 "use struct";
 
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, WithStore } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
 import Card from 'react-bootstrap/Card'
 import Badge from 'react-bootstrap/Badge'
+import Table from 'react-bootstrap/Table'
+import Form from 'react-bootstrap/Form'
 
+const Type2Text = {
+  'fanzine':  '同人誌',
+  'commerce': '商業誌',
+};
 
+// サークル表示用
 function CircleCard({ circleInfo }) {
+  const circleCut = circleInfo && circleInfo.circleCutImage || { url: '', width: 0, height: 1 };
   return (
-    <div className='item-frame'>
+    <div className='circle-card'>
       <Card >
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
           {circleInfo.name||' '}
         </Card.Header>
+        <div style={{ width: '100%', textAlign: 'center', marginTop: '8px' }} >
+          {circleCut.url && <Card.Img
+            variant="top"
+            src={circleCut.url}
+            style={{
+              width:  circleCut.width * 200 / circleCut.height,
+              height: 200,
+            }}
+          />}
+          {!circleCut.url && <div
+            style={{
+              display: 'inline-block',
+              width:  141,
+              height: 200,
+              border: '5px solid black',
+              overflow: 'hidden'
+            }}
+          >
+            <div style={{ top: '50%', position: 'relative', marginTop: '-0.5em', }}>
+              NO IMAGE
+            </div>
+          </div>}
+        </div>
         <Card.Body>
-          <Card.Title></Card.Title>
           <Card.Text>
-          {circleInfo.id}
+            <Form>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>サークル名</Form.Label>
+                <div className='form-control-plaintext' >{!circleInfo.nameRuby?circleInfo.name:`${circleInfo.name}(${circleInfo.nameRuby})`}</div>
+              </Form.Group>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>配置</Form.Label>
+                <div className='form-control-plaintext' >{circleInfo.spaces&&circleInfo.spaces[0]||''}</div>
+              </Form.Group>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>ペンネーム</Form.Label>
+                <div className='form-control-plaintext' >{circleInfo.penName}</div>
+              </Form.Group>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Webサイト</Form.Label>
+                <div className='form-control-plaintext' >{circleInfo.webSiteURL}</div>
+              </Form.Group>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>ジャンル</Form.Label>
+                <div className='form-control-plaintext' >{circleInfo.genre}</div>
+              </Form.Group>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>ジャンル詳細</Form.Label>
+                <div className='form-control-plaintext' >{circleInfo.genreFreeFormat}</div>
+              </Form.Group>
+            </Form>
           </Card.Text>
         </Card.Body>
       </Card>
@@ -31,27 +87,84 @@ function CircleCard({ circleInfo }) {
   );
 }
 
+// 製品表示用
 function ProductCard({ circleInfo, productInfo }) {
+  const firstImage = productInfo && productInfo.images && productInfo.images[0] || { url: '', width: 0, height: 1 };
   return (
-    <div className='item-frame'>
+    <div className='product-card'>
       <Card >
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
           {circleInfo.name||' '}
         </Card.Header>
-        <Card.Header>
+        {false&&<Card.Header>
           {productInfo.name||' '}
-        </Card.Header>
+        </Card.Header>}
+        <div style={{ width: '100%', textAlign: 'center', marginTop: '8px' }} >
+          {firstImage.url && <Card.Img
+            variant="top"
+            src={firstImage.url}
+            style={{
+              width:  firstImage.width * 200 / firstImage.height,
+              height: 200,
+            }}
+          />}
+        </div>
         <Card.Body>
-          <Card.Title></Card.Title>
           <Card.Text>
-          {circleInfo.id} - {productInfo.id}
+            <Form>
+            <Form.Group controlId="formBasicEmail">
+                  <Form.Label>頒布物</Form.Label>
+                  <div className='form-control-plaintext' >{productInfo.name}</div>
+                </Form.Group>
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>種類 / ページ / 価格</Form.Label>
+                  <div className='form-control-plaintext' >{`${Type2Text[productInfo.type]} / ${productInfo.page} ページ / ${productInfo.price?productInfo.price+' 円':''}`}</div>
+                </Form.Group>
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>初出</Form.Label>
+                  <div className='form-control-plaintext' >{productInfo.firstAppearanceEventName}</div>
+                </Form.Group>
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>概要</Form.Label>
+                  <pre className='form-control-plaintext' >{productInfo.description}</pre>
+                </Form.Group>
+              </Form>
           </Card.Text>
         </Card.Body>
       </Card>
     </div>
   );
 }
+
+class CarouselSelectChange_ extends React.Component {
+
+  constructor(props) {
+    super(props);console.log(this.props,this.context);
+    this._onChange = this.onChange.bind(this);
+  }
+
+  componentDidMount() {
+    //this.props.carouselStore.subscribe(this._onChange);
+  }
+
+  componentWillUnmount() {
+    //this.props.carouselStore.unsubscribe(this._onChange);
+  }
+
+  onChange(...args) {
+    console.log('CarouselSelectChange','onChange',args);
+  }
+
+  render() {
+    console.log('CarouselSelectChange',this.state,this.props);
+    return <div />;
+  }
+}
+CarouselSelectChange_.contextTypes = {
+  carouselStore: PropTypes.object
+};
+const CarouselSelectChange = WithStore(CarouselSelectChange_, (...args) => { console.log('CarouselSelectChange_', this,args); return args; });
 
 function CircleSelectView({ models, history, params }) {
   const { circle, product } = models;
@@ -150,6 +263,7 @@ function CircleSelectView({ models, history, params }) {
         totalSlides={circleList_.length}
         currentSlide={curCircleIndex}
       >
+        <CarouselSelectChange />
         <Slider>
           {circleList_.map((circleId_, index) => {
             const circleInfo_ = circleInfo && circleInfo.id ==  circleId_ ? circleInfo : { id: circleId_ };
