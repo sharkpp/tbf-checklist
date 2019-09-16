@@ -2,13 +2,21 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import CircleModel from './models/Circle';
-import App from './App';
+
 import * as serviceWorker from './serviceWorker';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
+
+import CircleModel from './models/Circle';
+import ProductModel from './models/Product';
+
+import App from './App';
+
+
 const models = {
-  circle: new CircleModel()
+  circle:  new CircleModel(),
+  product: new ProductModel(),
 };
 
 models.circle.request();

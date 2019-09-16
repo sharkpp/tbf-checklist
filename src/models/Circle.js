@@ -53,7 +53,7 @@ export default class CircleModel {
     else {
       this._waitCircleList = reqCircleList = true;
       reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&eventExhibitCourseID=3&visibility=site&limit=100&onlyAdoption=true`);
-      reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&visibility=site&limit=100&onlyAdoption=true`);
+    //  reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&visibility=site&limit=100&onlyAdoption=true`);
     }
 
     // 情報を要求
@@ -64,6 +64,7 @@ export default class CircleModel {
           this._waitCircleList = false;
         }
         this._event.emit('change');
+        this._event.emit('loaded');
       }
       else { // 取得継続中
         fetch(reqUrl, {
@@ -77,13 +78,29 @@ export default class CircleModel {
 
           console.log('CircleModel request',data);
 
-          for (let i = 0, circleInfo; circleInfo = data.list[i]; ++i) {
+          if (!data.list) {
+            const circleInfo = data;
             // サークル情報更新
             this._store.circles[circleInfo.id] = circleInfo;
             // 配置からサークルIdを引くための情報を更新
             for (let j = 0, space; space = circleInfo.spaces[j]; ++j) {
               this._store.lookupBy.booth[space] = circleInfo.id;
-              this._store.orderBy.booth.push(space);
+              if (this._store.orderBy.booth.indexOf(space) < 0) {
+                this._store.orderBy.booth.push(space);
+              }
+            }
+          }
+          else {
+            for (let i = 0, circleInfo; circleInfo = data.list[i]; ++i) {
+              // サークル情報更新
+              this._store.circles[circleInfo.id] = circleInfo;
+              // 配置からサークルIdを引くための情報を更新
+              for (let j = 0, space; space = circleInfo.spaces[j]; ++j) {
+                this._store.lookupBy.booth[space] = circleInfo.id;
+                if (this._store.orderBy.booth.indexOf(space) < 0) {
+                  this._store.orderBy.booth.push(space);
+                }
+              }
             }
           }
 
@@ -110,7 +127,8 @@ export default class CircleModel {
   // 通知を登録
   on(name, listner) {
     this._event.on(name, listner);
-    if ('change' == name && false === this._waitCircleList) {
+    if (0 <= ['change','loaded'].indexOf(name) &&
+        false === this._waitCircleList) {
       listner(name);
     }
   }
@@ -120,6 +138,13 @@ export default class CircleModel {
     this._event.removeListener(name, listner);
   }
 
+  getCircleListOrderByBooth() {
+    return (this._store.orderBy.booth||[]).map((boothNo) => {
+      const circleInfo = this.getCircleByBooth(boothNo) || {};
+      return circleInfo.id;
+    });
+  }
+
   // サークル情報を配置から取得
   getCircleByBooth(boothNo) {
     return this._store.circles[
@@ -127,6 +152,14 @@ export default class CircleModel {
         boothNo
       ]
     ];
+  }
+
+  // サークル情報を配置から取得
+  getCircleBoothOrder(circleId) {
+    if (false !== this._waitCircleList) {
+      return -2;
+    }
+    return this._store.orderBy.booth.indexOf(((this._store.circles[circleId]||{}).spaces||[])[0]);
   }
 
   // サークルを取得
@@ -150,19 +183,19 @@ export default class CircleModel {
     );
   }
 
-  // 次のサークルを取得
-  getNextSiblingsBooth(circleId) {
-    const circleInfo = this._store.circles[circleId];
-    const spaceName = circleInfo.spaces[0]; // ToDo:配置が複数あり連続していない場合は... ループしそう...
-    const orderIndex = this._store.orderBy.indexOf(spaceName);
-    return false === this._waitCircleList && this.getCircleByBooth(this._store.orderBy.booth[orderIndex + 1]);
-  }
-
   // 前のサークルを取得
   getPrevSiblingsBooth(circleId) {
     const circleInfo = this._store.circles[circleId];
-    const spaceName = circleInfo.spaces[0]; // ToDo:配置が複数あり連続していない場合は... ループしそう...
-    const orderIndex = this._store.orderBy.indexOf(spaceName);
+    const boothNo = ((circleInfo||{}).spaces||[])[0]; // ToDo:配置が複数あり連続していない場合は... ループしそう...
+    const orderIndex = this._store.orderBy.booth.indexOf(boothNo);
+    return false === this._waitCircleList && this.getCircleByBooth(this._store.orderBy.booth[orderIndex - 1]);
+  }
+
+  // 次のサークルを取得
+  getNextSiblingsBooth(circleId) {
+    const circleInfo = this._store.circles[circleId];
+    const boothNo = ((circleInfo||{}).spaces||[])[0]; // ToDo:配置が複数あり連続していない場合は... ループしそう...
+    const orderIndex = this._store.orderBy.booth.indexOf(boothNo);
     return false === this._waitCircleList && this.getCircleByBooth(this._store.orderBy.booth[orderIndex + 1]);
   }
 }

@@ -2,22 +2,71 @@
 
 import React, { useEffect, useState } from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
+
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
+
+import Card from 'react-bootstrap/Card'
+import Badge from 'react-bootstrap/Badge'
+
+
+function ItemCard({ circleInfo, productInfo }) {console.log('ItemCard', circleInfo, productInfo);
+  return (
+    <div className='item-frame'>
+      <Card >
+        <Card.Header>
+          <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
+          {circleInfo.name||' '}
+        </Card.Header>
+        {productInfo.name && <Card.Header>
+          {productInfo.name||' '}
+        </Card.Header>}
+        <Card.Body>
+          <Card.Title></Card.Title>
+          <Card.Text>
+          {circleInfo.id} - {productInfo.id}
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    </div>
+  );
+}
+
 function CircleSelectView({ models, history, params }) {
-　console.log('CircleSelectView',{models,params});
-  const { circle } = models;
-  const { event, circleId } = params;
+  const { circle, product } = models;
+  const { event, circleId, productId } = params;
+  console.log('CircleSelectView',{models, history, params});
 
   const [ circleInfo, setCircleInfo ] = useState();
+  const [ productInfo, setProductInfo ] = useState();
+  const [ circleList, setCircleList ] = useState();
+  const [ productList, setProductList ] = useState();
 
   useEffect(() => {
     const currentCircleInfo = circle.getCircle(circleId);
     setCircleInfo(currentCircleInfo);
-    return () => {};
   }, [circle, circleId]);
 
-  useEffect(() => {console.log('CircleSelectView','useEffect');
-    const onChange = () => {
-      console.log('CircleSelectView','onChange',[event, circle, circleId, history]);
+  useEffect(() => {
+    if (circleId) {
+      const currentProductList = product.getProductList(circleId);
+        setProductList(currentProductList ? [null].concat(currentProductList) : false);
+        if (productId) {
+          // 今のサークルの製品を表示
+          const currentProductInfo = product.getProduct(circleId, productId);
+          setProductInfo(currentProductInfo);
+        }
+        else {
+          setProductInfo(false);
+        }
+    }
+  }, [circleId, product, productId]);
+
+  useEffect(() => {//console.log('CircleSelectView','useEffect');
+    const onCircleChange = () => {
+      //console.log('CircleSelectView','onCircleChange',circleId);
       if (!circleId) {
         // サークルを選択していない場合は一番初めのサークルの飛ぶ
         const firstCircleInfo = circle.getFirstBooth();
@@ -29,19 +78,145 @@ function CircleSelectView({ models, history, params }) {
         // 今のサークルを表示
         const currentCircleInfo = circle.getCircle(circleId);
         setCircleInfo(currentCircleInfo);
+        // サークルの製品を取得
+        const currentProductList = product.getProductList(circleId);
+        if (!currentProductList) {
+          product.request({ circleId: circleId });
+        }
+        setProductList(currentProductList ? [null].concat(currentProductList) : false);
       }
     };
-    circle.on('change',onChange);
+    const onCircleLoaded = () => {
+      //console.log('CircleSelectView','onCircleLoaded',circleId,circle.getCircle(circleId));
+      setCircleList(circle.getCircleListOrderByBooth());
+      const circleInfo_ = circle.getCircle(circleId);
+      setCircleInfo(circleInfo_);
+      // サークルの製品を取得
+      const currentProductList = product.getProductList(circleId);
+      if (!currentProductList) {
+        product.request({ circleId: circleId });
+      }
+      setProductList(currentProductList ? [null].concat(currentProductList) : false);
+    };
+    const onProductChange = () => {
+      console.log('CircleSelectView','onProductChange',circleId,productId);
+      if (circleId) {
+        const currentProductList = product.getProductList(circleId);
+        setProductList(currentProductList ? [null].concat(currentProductList) : false);
+        if (productId) {
+          // 今のサークルの製品を表示
+          const currentProductInfo = product.getProduct(circleId, productId);
+          setProductInfo(currentProductInfo);
+        }
+        else {
+          setProductInfo(false);
+        }
+      }
+    };
+    const onProductLoaded = () => {
+      onProductChange();
+    };
+    // 通知先を登録
+    circle.on('change',onCircleChange);
+    circle.on('loaded',onCircleLoaded);
+    product.on('change',onProductChange);
+    product.on('loaded',onProductLoaded);
     // クリーンアップ関数を返す
-    return () => circle.off('change',onChange);
-  }, [event, circle, circleId, history]);
+    return () => {
+      circle.off('change',onCircleChange);
+      circle.off('loaded',onCircleLoaded);
+      product.off('change',onProductChange);
+      product.off('loaded',onProductLoaded);
+    };
+  }, [event, circle, product, circleId, productId, history]);
+  //console.log('circleInfo',circleId,circleInfo,circle.getCircleBoothOrder(circleId));
+  //console.log('circleList',circleList);
 
-
+  const circleList_ = circleList || [];
   return (
-    <div>
-      {!circleId || !circleInfo ? <div>loading</div> : <div>{JSON.stringify(circleInfo)}</div>}
-    </div>
+    <CarouselProvider
+        className='circle-list'
+        naturalSlideWidth={window.innerWidth}
+        naturalSlideHeight={window.innerHeight}
+        totalSlides={circleList_.length}
+        currentSlide={circle.getCircleBoothOrder(circleId)}
+      >
+        <Slider>
+          {circleList_.map((circleId_, index) => {
+            const circleInfo_ = circleInfo && circleInfo.id ==  circleId_ ? circleInfo : { id: circleId_ };
+            return (
+              <Slide key={`_${circleId_}_${index}`} index={index}>
+                <CarouselProvider
+                  key={`_${circleId_}_carousel_${index}`}
+                  className='product-list'
+                  naturalSlideWidth={window.innerWidth}
+                  naturalSlideHeight={window.innerHeight}
+                  totalSlides={(productList||[null]).length}
+                  orientation='vertical'
+                >
+                  <Slider>
+                    {(productList||[null]).map((productId_, index) => {
+                      //console.log('>>',[(circleInfo||{}).id,circleId_,circleId]);
+                      const productInfo_ = productInfo && productInfo.id ==  productId_ ? productInfo : { id: productId_ };
+                      return (
+                        <Slide key={`_${circleId_}_${productId}_${index}`} index={index}>
+                          <ItemCard
+                            key={`_${circleId_}_${productId}_item_${index}`}
+                            circleInfo={circleInfo_}
+                            productInfo={productInfo_}
+                          />
+                        </Slide>
+                      );
+                    })}
+                  </Slider>
+                  <ButtonBack
+                    onClick={() => {console.log('ButtonTop');
+                      const prevProduct = product.getPrevSiblings(circleId, productId);
+                      history.push(
+                        prevProduct
+                          ? `/${event}/circle/${circleId}/${prevProduct.id}`
+                          : `/${event}/circle/${circleId}`
+                        );
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faAngleUp} color="green" />
+                  </ButtonBack>
+                  <ButtonNext
+                    onClick={() => {console.log('ButtonButton');
+                      const nextProduct = product.getNextSiblings(circleId, productId);
+                      history.push(
+                        nextProduct
+                          ? `/${event}/circle/${circleId}/${nextProduct.id}`
+                          : `/${event}/circle/${circleId}`
+                        );
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faAngleDown} color="green" />
+                  </ButtonNext>
+                </CarouselProvider>
+              </Slide>
+            );
+          })}
+        </Slider>
+        <ButtonBack
+          onClick={() => {console.log('ButtonBack');
+            const prevCircle = circle.getPrevSiblingsBooth(circleId);
+            history.push(`/${event}/circle/${prevCircle.id}`);
+          }}
+        >
+          <FontAwesomeIcon icon={faAngleLeft} color="green" />
+        </ButtonBack>
+        <ButtonNext
+          onClick={() => {console.log('ButtonNext');
+            const nextCircle = circle.getNextSiblingsBooth(circleId);
+            history.push(`/${event}/circle/${nextCircle.id}`);
+          }}
+        >
+          <FontAwesomeIcon icon={faAngleRight} color="green" />
+        </ButtonNext>
+      </CarouselProvider>
   );
+
 }
 
 export default CircleSelectView;

@@ -10,40 +10,38 @@ import CircleSelectView from './views/CircleSelect';
 function App({ models }) {
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about/">About</Link>
-            </li>
-            <li>
-              <Link to="/users/">Users</Link>
-            </li>
-          </ul>
-        </nav>
+      {false&&<nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about/">About</Link>
+          </li>
+          <li>
+            <Link to="/users/">Users</Link>
+          </li>
+        </ul>
+      </nav>}
 
-        <Route
-          path="/" exact
-          render={(router) => 
-            <EventSelectView
-              models={models}
-              history={router.history}
-              params={router.match.params}
-            />}
-        />
-        <Route
-          path="/:event/circle/:circleId?" exact
-          render={(router) => 
-            <CircleSelectView
-              models={models}
-              history={router.history}
-              params={router.match.params}
-            />}
-        />
-      </div>
+      <Route
+        path="/" exact
+        render={(router) => 
+          <EventSelectView
+            models={models}
+            history={router.history}
+            params={router.match.params}
+          />}
+      />
+      <Route
+        path="/:event/circle/:circleId?/:productId?"
+        render={(router) => 
+          <CircleSelectView
+            models={models}
+            history={router.history}
+            params={router.match.params}
+          />}
+      />
     </Router>
   );
 }
