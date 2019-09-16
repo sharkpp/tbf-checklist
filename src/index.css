@@ -37,7 +37,12 @@ code {
 .product-list {
   height: 100% !important;
 }
-.product-list > .carousel__back-button,
+.product-list > .carousel__back-button {
+  margin-left: 75px;
+  width: calc(100% - 150px) !important;
+  position: absolute;
+  left: 0;
+}
 .product-list > .carousel__next-button {
   width: 100% !important;
   position: absolute;
@@ -48,12 +53,6 @@ code {
 }
 .product-list > .carousel__next-button {
   bottom: 0;
-}
-
-.product-list,
-.product-list > .carousel__back-button,
-.product-list > .carousel__next-button {
-  width: 100% !important;
 }
 
 .circle-card,

@@ -2,13 +2,11 @@
 
 import React from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar as faStarChecked } from '@fortawesome/free-solid-svg-icons'
-import { faStar as faStarUnchecked } from '@fortawesome/free-regular-svg-icons'
-
 import Card from 'react-bootstrap/Card'
 import Badge from 'react-bootstrap/Badge'
 import Form from 'react-bootstrap/Form'
+
+import FavoriteStart from './FavoriteStart'
 
 const Type2Text = {
   'fanzine':  '同人誌',
@@ -24,6 +22,8 @@ function ProductCard({ models, circleInfo, productInfo }) {
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
           {circleInfo.name||' '}
+          <FavoriteStart models={models}
+            circleId={circleInfo && circleInfo.id} productId={productInfo && productInfo.id} />
         </Card.Header>
         {false&&<Card.Header>
           {productInfo.name||' '}
@@ -41,19 +41,19 @@ function ProductCard({ models, circleInfo, productInfo }) {
         <Card.Body>
           <Card.Text>
             <Form>
-            <Form.Group controlId="formBasicEmail">
+            <Form.Group controlId="name">
                   <Form.Label>頒布物</Form.Label>
                   <div className='form-control-plaintext' >{productInfo.name}</div>
                 </Form.Group>
-                <Form.Group controlId="formBasicEmail">
+                <Form.Group controlId="page">
                   <Form.Label>種類 / ページ / 価格</Form.Label>
                   <div className='form-control-plaintext' >{`${Type2Text[productInfo.type]} / ${productInfo.page} ページ / ${productInfo.price?productInfo.price+' 円':''}`}</div>
                 </Form.Group>
-                <Form.Group controlId="formBasicEmail">
+                <Form.Group controlId="firstAppearanceEventName">
                   <Form.Label>初出</Form.Label>
                   <div className='form-control-plaintext' >{productInfo.firstAppearanceEventName}</div>
                 </Form.Group>
-                <Form.Group controlId="formBasicEmail">
+                <Form.Group controlId="description">
                   <Form.Label>概要</Form.Label>
                   <pre className='form-control-plaintext' >{productInfo.description}</pre>
                 </Form.Group>
