@@ -1,6 +1,7 @@
 "use struct";
 
 const EventEmitter = require('events');
+const FileDownload = require('js-file-download');
 
 const KeyLocalStorage = 'favorite';
 
@@ -59,6 +60,24 @@ export default class FavoriteModel {
         localStorage.setItem(KeyLocalStorage, JSON.stringify(this._store));
         this._event.emit('change', { circleId: circleId, productId: productId, favorite: false });
       }
+    }
+  }
+
+  export() {
+    FileDownload(JSON.stringify(this._store), 'favorite.json');
+  }
+
+  import(text) {
+    try {
+      let data = JSON.parse(text);
+      // ここで内容をチェック
+      this._store = data;
+      localStorage.setItem(KeyLocalStorage, JSON.stringify(this._store));
+      this._event.emit('change');
+      return true;
+    }
+    catch (e) {
+      return false;
     }
   }
 

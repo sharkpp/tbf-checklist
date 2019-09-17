@@ -1,17 +1,19 @@
 "use struct";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import { Button, Spinner } from 'react-bootstrap';
+import { FormControl, Dropdown } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
 import CircleCard from '../components/CircleCard'
 import ProductCard from '../components/ProductCard'
+import HamburgerMenuButton from '../components/HamburgerMenuButton'
 
 function CircleSelectView({ models, history, params }) {
-  const { circle, product } = models;
+  const { circle, product, favorite } = models;
   const { event, circleId, productId } = params;
   //console.log('CircleSelectView',{models, history, params});
 
@@ -19,6 +21,18 @@ function CircleSelectView({ models, history, params }) {
   const [ circleInfo,  setCircleInfo  ] = useState();
   const [ productList, setProductList ] = useState();
   const [ productInfo, setProductInfo ] = useState();
+
+  const handleFavoriteList = useCallback(() => {
+    history.push(`/fav/list`);
+  });
+
+  const handleFavoriteSave = useCallback(() => {
+    favorite.export();
+  }, [favorite]);
+
+  const handleFavoriteLoad = useCallback(() => {
+    history.push(`/fav/import`);
+  }, [favorite, history]);
 
   useEffect(() => {
     const circleInfo_ = circle.getCircle(circleId);
@@ -114,6 +128,19 @@ function CircleSelectView({ models, history, params }) {
         !circleInfo ? 0 : (!productInfo || !productInfo.name ? 1 : 2)
       ]}
 
+      <Dropdown className='card-menu-btn'>
+        <Dropdown.Toggle as={HamburgerMenuButton} id="dropdown-custom-components">
+          
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu >
+          <Dropdown.Item eventKey="1" onSelect={handleFavoriteList}>お気に入り一覧</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item eventKey="2" onSelect={handleFavoriteSave}>お気に入りをエクスポート</Dropdown.Item>
+          <Dropdown.Item eventKey="3" onSelect={handleFavoriteLoad}>お気に入りをインポート</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+
       <Button
         variant="link"
         className={"circle-prev"+(circleInfo&&circle.hasPrevCircle(circleId)?'':' btn-hidden')}
@@ -122,7 +149,7 @@ function CircleSelectView({ models, history, params }) {
           prevCircleId && history.push(`/${event}/circle/${prevCircleId}`);
         }}
       >
-        <FontAwesomeIcon icon={faAngleLeft} color={"black"} size="3x" />
+        <FontAwesomeIcon icon={faAngleLeft} color={"gray"} size="3x" />
       </Button>
 
       <Button
@@ -133,7 +160,7 @@ function CircleSelectView({ models, history, params }) {
           nextCircleId && history.push(`/${event}/circle/${nextCircleId}`);
         }}
       >
-        <FontAwesomeIcon icon={faAngleRight} color={"black"} size="3x" />
+        <FontAwesomeIcon icon={faAngleRight} color={"gray"} size="3x" />
       </Button>
 
 
@@ -149,7 +176,7 @@ function CircleSelectView({ models, history, params }) {
             );
         }}
       >
-        <FontAwesomeIcon icon={faAngleUp} color={"black"} size="3x" />
+        <FontAwesomeIcon icon={faAngleUp} color={"gray"} size="3x" />
       </Button>
 
       <Button
@@ -164,7 +191,7 @@ function CircleSelectView({ models, history, params }) {
             );
         }}
       >
-        <FontAwesomeIcon icon={faAngleDown} color={"black"} size="3x" />
+        <FontAwesomeIcon icon={faAngleDown} color={"gray"} size="3x" />
       </Button>
 
     </div>

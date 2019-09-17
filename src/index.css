@@ -17,6 +17,10 @@ code {
     monospace;
 }
 
+.page-container {
+  padding: 24px;
+}
+
 .loading {
   position: relative;
   width: 100%;
@@ -124,4 +128,10 @@ code {
   min-height: 75px;
   height: 10%;
   margin-left: 75px;
+}
+
+.card-menu-btn {
+  position: absolute;
+  left: 4px;
+  top: 4px;
 }
