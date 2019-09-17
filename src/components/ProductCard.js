@@ -49,7 +49,11 @@ function ProductCard({ models, circleInfo, productInfo, isCurrent }) {
                 </Form.Group>
                 <Form.Group controlId="page">
                   <Form.Label>種類 / ページ / 価格</Form.Label>
-                  <div className='form-control-plaintext' >{`${Type2Text[productInfo.type]} / ${productInfo.page} ページ / ${productInfo.price?productInfo.price+' 円':''}`}</div>
+                  <div className='form-control-plaintext' >{[
+                    Type2Text[productInfo.type],
+                    productInfo.page?`${productInfo.page} ページ`:`ページ数不明`,
+                    undefined !== productInfo.price?`${productInfo.price} 円`:'価格不明'
+                  ].join(' / ')}</div>
                 </Form.Group>
                 <Form.Group controlId="firstAppearanceEventName">
                   <Form.Label>初出</Form.Label>
