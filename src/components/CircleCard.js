@@ -62,10 +62,10 @@ function CircleCard({ models, circleInfo, isCurrent }) {
                 <Form.Label>ペンネーム</Form.Label>
                 <div className='form-control-plaintext' >{circleInfo.penName}</div>
               </Form.Group>
-              <Form.Group controlId="webSiteURL">
+              {circleInfo.webSiteURL && <Form.Group controlId="webSiteURL">
                 <Form.Label>Webサイト</Form.Label>
                 <div className='form-control-plaintext' >{circleInfo.webSiteURL}</div>
-              </Form.Group>
+              </Form.Group>}
               <Form.Group controlId="genre">
                 <Form.Label>ジャンル</Form.Label>
                 <div className='form-control-plaintext' >{circleInfo.genre}</div>
