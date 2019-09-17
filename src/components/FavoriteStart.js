@@ -18,9 +18,14 @@ function FavoriteStar({ models, circleId, productId, isCurrent }) {
 
   useEffect(() => {//console.log('CircleSelectView','useEffect');
     const onFavoriteChange = (params) => {
-      if (circleId  === params.circleId &&
-          productId === params.productId) {
-        setFavorited(params.favorite);
+      if (!params) {
+        setFavorited(favorite.isFavorite(circleId, productId));
+      }
+      else {
+        if (circleId  === params.circleId &&
+            productId === params.productId) {
+          setFavorited(params.favorite);
+        }
       }
     };
     // 通知先を登録
