@@ -38,8 +38,8 @@ export default class CircleModel {
       circles: {}, // サークルIDをキーにして収納されたサークルの情報
     }, JSON.parse(sessionStorage.getItem(KeyLocalStorage)) || {});
 
-    this._waitRequestList = {};
-    this._waitRequestListList = false;
+    this._waitRequest = {};
+    this._waitRequestList = false;
   }
 
   _updateCache() {
