@@ -34,7 +34,7 @@ export default class FavoriteModel {
     );
   }
 
-  setFavorite(circleId, productId) { console.log('setFavorite', circleId, productId);
+  setFavorite(circleId, productId) { //console.log('setFavorite', circleId, productId);
     if (circleId) {
       this._store[eventId] = this._store[eventId] || {};
       this._store[eventId][circleId] = this._store[eventId][circleId] || { 'circle': null };
@@ -48,7 +48,7 @@ export default class FavoriteModel {
     }
   }
 
-  unsetFavorite(circleId, productId) { console.log('unsetFavorite', circleId, productId);
+  unsetFavorite(circleId, productId) { //console.log('unsetFavorite', circleId, productId);
     if (circleId) {
       this._store[eventId] = this._store[eventId] || {};
       this._store[eventId][circleId] = this._store[eventId][circleId] || { 'circle': null };

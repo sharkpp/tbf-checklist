@@ -112,7 +112,7 @@ function CircleSelectView({ models, history, params }) {
         totalSlides={circleList_.length}
         currentSlide={curCircleIndex}
       >
-        <Slider onMasterSpinner={(...args)=>{console.log('>>>',args);}} >
+        <Slider>
           {circleList_.map((circleId_, index) => {
             const circleInfo_ = circleInfo && circleInfo.id ==  circleId_ ? circleInfo : { id: circleId_ };
             return (
@@ -153,7 +153,7 @@ function CircleSelectView({ models, history, params }) {
                   </Slider>
                   <ButtonBack
                     style={curProductIndex - 1 < 0 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
-                    onClick={() => {console.log('ButtonTop');
+                    onClick={() => {//console.log('ButtonTop');
                       const prevProduct = product.getPrevSiblings(circleId, productId);
                       history.push(
                         prevProduct
@@ -166,7 +166,7 @@ function CircleSelectView({ models, history, params }) {
                   </ButtonBack>
                   <ButtonNext
                     style={productList_.length <= curProductIndex + 1 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
-                    onClick={() => {console.log('ButtonButton');
+                    onClick={() => {//console.log('ButtonButton');
                       const nextProduct = product.getNextSiblings(circleId, productId);
                       history.push(
                         nextProduct
@@ -184,7 +184,7 @@ function CircleSelectView({ models, history, params }) {
         </Slider>
         <ButtonBack
           style={curCircleIndex - 1 < 0 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
-          onClick={() => {console.log('ButtonBack');
+          onClick={() => {//console.log('ButtonBack');
             const prevCircle = circle.getPrevSiblingsBooth(circleId);
             history.push(`/${event}/circle/${prevCircle.id}`);
           }}
@@ -193,7 +193,7 @@ function CircleSelectView({ models, history, params }) {
         </ButtonBack>
         <ButtonNext
           style={circleList_.length <= curCircleIndex + 1 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
-          onClick={() => {console.log('ButtonNext');
+          onClick={() => {//console.log('ButtonNext');
             const nextCircle = circle.getNextSiblingsBooth(circleId);
             history.push(`/${event}/circle/${nextCircle.id}`);
           }}

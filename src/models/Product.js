@@ -40,7 +40,7 @@ export default class ProductModel {
     const req = () => {
       const reqUrl = reqUrls.shift();
       if (!reqUrl) { // 取得完了
-        if (reqProductList) { console.log('ProductModel request comp!');
+        if (reqProductList) { //console.log('ProductModel request comp!');
           this._waitProductList = false;
         }
         this._event.emit('change');
@@ -56,7 +56,7 @@ export default class ProductModel {
             reqUrls.unshift(`${reqUrl.replace(/&cursor=.+$/,'')}&cursor=${data.cursor}`);
           }
 
-          console.log('ProductModel request',data);
+          //console.log('ProductModel request',data);
 
           if (data.list) {
             for (let i = 0, productInfo; productInfo = data.list[i]; ++i) {
@@ -135,7 +135,7 @@ export default class ProductModel {
   getNextSiblings(circleId, productId) {
     const products   = this._store.products[circleId];
     const orderBySeq = this._store.orderBy.seq[circleId];
-    const indexBySeq = orderBySeq && orderBySeq.indexOf(productId);console.log('getNextSiblings',orderBySeq,products);
+    const indexBySeq = orderBySeq && orderBySeq.indexOf(productId);
     return orderBySeq && products[orderBySeq[indexBySeq + 1]] || false;
   }
 
