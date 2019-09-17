@@ -10,9 +10,6 @@ import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/
 import CircleCard from '../components/CircleCard'
 import ProductCard from '../components/ProductCard'
 
-const CarouselButtonNormalStyle = { background: 'transparent', border: '0px solid transparent' };
-const CarouselButtonHiddenStyle = Object.assign({ display: 'none' }, CarouselButtonNormalStyle);
-
 function CircleSelectView({ models, history, params }) {
   const { circle, product } = models;
   const { event, circleId, productId } = params;
@@ -90,20 +87,9 @@ function CircleSelectView({ models, history, params }) {
       product.off('loaded',onProductLoaded);
     };
   }, [event, circle, product, circleId, productId, history]);
-  //console.log('circleInfo',circleId,circleInfo,circle.getCircleBoothOrder(circleId));
-  //console.log('circleList',circleList);
-
-  //const circleList  = circle.getCircleListOrderByBooth() || [];
-  //const productList = [null].concat(product.getProductList(circleId) || []);
-  
-  const circleList_  = circleList || [];
-  const curCircleIndex = circle.getCircleBoothOrder(circleId);
-  const productList_ = [null].concat(productList || []);
-  const curProductIndex = product.getProductOrder(circleId, productId)+1;
 
   const circleInfo_  = circleInfo  || { id: circleId };
   const productInfo_ = productInfo || { id: productId };
-//console.log(circleInfo,productInfo);
 
   return (
     <div className="card-container">
@@ -132,8 +118,8 @@ function CircleSelectView({ models, history, params }) {
         variant="link"
         className={"circle-prev"+(circleInfo&&circle.hasPrevCircle(circleId)?'':' btn-hidden')}
         onClick={() => {//console.log('ButtonBack');
-          const prevCircle = circle.getPrevCircle(circleId);
-          prevCircle && prevCircle.id && history.push(`/${event}/circle/${prevCircle.id}`);
+          const prevCircleId = circle.getPrevCircleId(circleId);
+          prevCircleId && history.push(`/${event}/circle/${prevCircleId}`);
         }}
       >
         <FontAwesomeIcon icon={faAngleLeft} color={"black"} size="3x" />
@@ -143,8 +129,8 @@ function CircleSelectView({ models, history, params }) {
         variant="link"
         className={"circle-next"+(circleInfo&&circle.hasNextCircle(circleId)?'':' btn-hidden')}
         onClick={() => {//console.log('ButtonNext');
-          const nextCircle = circle.getNextCircle(circleId);console.log(nextCircle);
-          nextCircle && nextCircle.id && history.push(`/${event}/circle/${nextCircle.id}`);
+          const nextCircleId = circle.getNextCircleId(circleId);
+          nextCircleId && history.push(`/${event}/circle/${nextCircleId}`);
         }}
       >
         <FontAwesomeIcon icon={faAngleRight} color={"black"} size="3x" />

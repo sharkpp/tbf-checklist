@@ -38,7 +38,8 @@ export default class CircleModel {
       circles: {}, // サークルIDをキーにして収納されたサークルの情報
     }, JSON.parse(sessionStorage.getItem(KeyLocalStorage)) || {});
 
-    this._waitCircleList = null;
+    this._waitRequestList = {};
+    this._waitRequestListList = false;
   }
 
   _updateCache() {
@@ -54,20 +55,26 @@ export default class CircleModel {
 
     const eventId = 'tbf07';
     let reqUrls = [];
-    let reqCircleList = false;
+    let reqInfo = false;
 
     if (options.circleId) { // 特定のサークルのみ取得
+      if (this._waitRequest[options.circleId]) { // 要求中なので何もしない
+        console.debug(`request wait for ${options.circleId}`);
+        return;
+      }
       reqUrls.push(`${Endpoint}/circle/${options.circleId}`);
+      this._waitRequest[options.circleId] = true;
+      reqInfo = options.circleId;
     }
     else { // 全てのサークルを取得
       if (0&&this._store.loadCompleted && !options.force) {
-        this._waitCircleList = false;
+        this._waitRequestList = false;
         console.debug('circle list uses cache');
         this._event.emit('change');
         this._event.emit('loaded');
         return;
       }
-      this._waitCircleList = reqCircleList = true;
+      this._waitRequestList = reqInfo = true;
       this._store.loadCompleted = false;
       this._updateCache();
       reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&eventExhibitCourseID=3&visibility=site&limit=100&onlyAdoption=true`);
@@ -78,9 +85,12 @@ export default class CircleModel {
     const req = () => {
       const reqUrl = reqUrls.shift();
       if (!reqUrl) { // 取得完了
-        if (reqCircleList) { //console.log('CircleModel request comp!');
-          this._waitCircleList = false;
+        if (true === reqInfo) { //console.log('CircleModel request comp!');
+          this._waitRequestList = false;
           this._store.loadCompleted = true;
+        }
+        else {
+          delete this._waitRequest[reqInfo];
         }
         this._updateCache();
         this._event.emit('change');
@@ -153,7 +163,7 @@ export default class CircleModel {
   on(name, listner) {
     this._event.on(name, listner);
     if (0 <= ['change','loaded'].indexOf(name) &&
-        false === this._waitCircleList) {
+        false === this._waitRequestList) {
       listner(name);
     }
   }
@@ -181,7 +191,7 @@ export default class CircleModel {
 
   // サークル情報を配置から取得
   getCircleBoothOrder(circleId) {
-    if (false !== this._waitCircleList) {
+    if (false !== this._waitRequestList) {
       return -2;
     }
     return this._store.orderBy.booth.indexOf(((this._store.circles[circleId]||{}).spaces||[])[0]);
@@ -195,7 +205,7 @@ export default class CircleModel {
   // 配置の一番最初を取得
   getFirstBooth() {
     return (
-      false === this._waitCircleList &&
+      false === this._waitRequestList &&
       this.getCircleByBooth(this._store.orderBy.booth[0])
     );
   }
@@ -203,7 +213,7 @@ export default class CircleModel {
   // 配置の一番最後を取得
   getLastBooth() {
     return (
-      false === this._waitCircleList &&
+      false === this._waitRequestList &&
       this.getCircleByBooth(this._store.orderBy.booth[this._store.orderBy.booth.length - 1])
     );
   }
@@ -230,5 +240,17 @@ export default class CircleModel {
   getNextCircle(circleId) {
     const circleInfo = this._store.circles[circleId];
     return circleInfo && circleInfo.nextCircleExhibitInfoID && this._store.circles[circleInfo.nextCircleExhibitInfoID];
+  }
+
+  // 前のサークルを取得
+  getPrevCircleId(circleId) {
+    const circleInfo = this._store.circles[circleId];
+    return circleInfo && circleInfo.prevCircleExhibitInfoID;
+  }
+
+  // 次のサークルを取得
+  getNextCircleId(circleId) {
+    const circleInfo = this._store.circles[circleId];
+    return circleInfo && circleInfo.nextCircleExhibitInfoID;
   }
 }
