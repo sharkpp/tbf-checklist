@@ -4,6 +4,8 @@ const EventEmitter = require('events');
 
 const KeyLocalStorage = 'favorite';
 
+const eventId = 'tbf07';
+
 export default class FavoriteModel {
 
   constructor() {
@@ -27,17 +29,18 @@ export default class FavoriteModel {
 
   isFavorite(circleId, productId) {
     return !!(productId
-      ? (this._store[circleId] && this._store[circleId][productId])
-      : (this._store[circleId] && this._store[circleId]['circle'])
+      ? (this._store[eventId] && this._store[eventId][circleId] && this._store[eventId][circleId][productId])
+      : (this._store[eventId] && this._store[eventId][circleId] && this._store[eventId][circleId]['circle'])
     );
   }
 
   setFavorite(circleId, productId) { console.log('setFavorite', circleId, productId);
     if (circleId) {
-      this._store[circleId] = this._store[circleId] || { 'circle': null };
+      this._store[eventId] = this._store[eventId] || {};
+      this._store[eventId][circleId] = this._store[eventId][circleId] || { 'circle': null };
       const key = productId ? productId : 'circle';
-      const updated = true !== this._store[circleId][key];
-      this._store[circleId][key] = true;
+      const updated = true !== this._store[eventId][circleId][key];
+      this._store[eventId][circleId][key] = true;
       if (updated) {
         localStorage.setItem(KeyLocalStorage, JSON.stringify(this._store));
         this._event.emit('change', { circleId: circleId, productId: productId, favorite: true });
@@ -47,10 +50,11 @@ export default class FavoriteModel {
 
   unsetFavorite(circleId, productId) { console.log('unsetFavorite', circleId, productId);
     if (circleId) {
-      this._store[circleId] = this._store[circleId] || { 'circle': null };
+      this._store[eventId] = this._store[eventId] || {};
+      this._store[eventId][circleId] = this._store[eventId][circleId] || { 'circle': null };
       const key = productId ? productId : 'circle';
-      const updated = true === this._store[circleId][key];
-      delete this._store[circleId][key];
+      const updated = true === this._store[eventId][circleId][key];
+      delete this._store[eventId][circleId][key];
       if (updated) {
         localStorage.setItem(KeyLocalStorage, JSON.stringify(this._store));
         this._event.emit('change', { circleId: circleId, productId: productId, favorite: false });
