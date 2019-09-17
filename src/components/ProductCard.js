@@ -13,6 +13,8 @@ const Type2Text = {
   'commerce': '商業誌',
 };
 
+const ImageSize = 200;
+
 // 製品表示用
 function ProductCard({ models, circleInfo, productInfo, isCurrent }) {
   const firstImage = (productInfo && productInfo.images && productInfo.images[0]) || { url: '', width: 0, height: 1 };
@@ -28,14 +30,18 @@ function ProductCard({ models, circleInfo, productInfo, isCurrent }) {
         {false&&<Card.Header>
           {productInfo.name||' '}
         </Card.Header>}
-        <div style={{ width: '100%', textAlign: 'center', marginTop: '8px' }} >
+        <div style={{ width: '100%', height: ImageSize, marginTop: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
           {firstImage.url && <Card.Img
             variant="top"
             src={firstImage.url}
-            style={{
-              width:  firstImage.width * 200 / firstImage.height,
-              height: 200,
-            }}
+            style={Object.assign({
+            }, firstImage.width < firstImage.height ? {
+              width:  firstImage.width * ImageSize / firstImage.height,
+              height: ImageSize,
+            } : {
+              width:  ImageSize,
+              height: firstImage.height * ImageSize / firstImage.width,
+            })}
           />}
         </div>
         <Card.Body>
