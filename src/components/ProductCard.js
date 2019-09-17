@@ -6,7 +6,7 @@ import Card from 'react-bootstrap/Card'
 import Badge from 'react-bootstrap/Badge'
 import Form from 'react-bootstrap/Form'
 
-import FavoriteStart from './FavoriteStart'
+import FavoriteStar from './FavoriteStar'
 
 const Type2Text = {
   'fanzine':  '同人誌',
@@ -24,7 +24,7 @@ function ProductCard({ models, circleInfo, productInfo, isCurrent }) {
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
           {circleInfo.name||' '}
-          <FavoriteStart
+          <FavoriteStar
             key={`fav-${circleInfo && circleInfo.id}-${productInfo && productInfo.id}`}
             models={models} isCurrent={isCurrent}
             circleId={circleInfo && circleInfo.id} productId={productInfo && productInfo.id} />
