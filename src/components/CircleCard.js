@@ -70,7 +70,7 @@ function CircleCard({ models, circleInfo, isCurrent }) {
               </Form.Group>
               <Form.Group controlId="genreFreeFormat">
                 <Form.Label>ジャンル詳細</Form.Label>
-                <div className='form-control-plaintext' >{circleInfo.genreFreeFormat}</div>
+                <pre className='form-control-plaintext' style={{ whiteSpace: 'pre-wrap' }} >{circleInfo.genreFreeFormat}</pre>
               </Form.Group>
             </Form>
           </div>

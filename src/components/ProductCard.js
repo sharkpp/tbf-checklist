@@ -61,7 +61,7 @@ function ProductCard({ models, circleInfo, productInfo, isCurrent }) {
                 </Form.Group>
                 <Form.Group controlId="description">
                   <Form.Label>概要</Form.Label>
-                  <pre className='form-control-plaintext' >{productInfo.description}</pre>
+                  <pre className='form-control-plaintext' style={{ whiteSpace: 'pre-wrap' }} >{productInfo.description}</pre>
                 </Form.Group>
               </Form>
           </div>
