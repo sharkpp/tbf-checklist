@@ -22,6 +22,8 @@ jobs:
 
     - name: Build
       run: npm run build
+      env:
+        PUBLIC_URL: /tbf-checklist
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2.3.1
@@ -30,4 +32,3 @@ jobs:
         PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         PUBLISH_BRANCH: gh-pages
         PUBLISH_DIR: ./build
-        PUBLIC_URL: /tbf-checklist
