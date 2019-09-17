@@ -17,7 +17,9 @@ function CircleCard({ models, circleInfo, isCurrent }) {
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
           {circleInfo.name||' '}
-          <FavoriteStart models={models} isCurrent={isCurrent}
+          <FavoriteStart 
+            key={`fav-${circleInfo && circleInfo.id}`}
+            models={models} isCurrent={isCurrent}
             circleId={circleInfo && circleInfo.id} />
         </Card.Header>
         <div style={{ width: '100%', textAlign: 'center', marginTop: '8px' }} >

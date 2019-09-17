@@ -24,7 +24,9 @@ function ProductCard({ models, circleInfo, productInfo, isCurrent }) {
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
           {circleInfo.name||' '}
-          <FavoriteStart models={models} isCurrent={isCurrent}
+          <FavoriteStart
+            key={`fav-${circleInfo && circleInfo.id}-${productInfo && productInfo.id}`}
+            models={models} isCurrent={isCurrent}
             circleId={circleInfo && circleInfo.id} productId={productInfo && productInfo.id} />
         </Card.Header>
         {false&&<Card.Header>
