@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form'
 import FavoriteStart from './FavoriteStart'
 
 // サークル表示用
-function CircleCard({ models, circleInfo }) {
+function CircleCard({ models, circleInfo, isCurrent }) {
   const circleCut = circleInfo && circleInfo.circleCutImage || { url: '', width: 0, height: 1 };
   return (
     <div className='circle-card'>
@@ -17,7 +17,7 @@ function CircleCard({ models, circleInfo }) {
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
           {circleInfo.name||' '}
-          <FavoriteStart models={models}
+          <FavoriteStart models={models} isCurrent={isCurrent}
             circleId={circleInfo && circleInfo.id} />
         </Card.Header>
         <div style={{ width: '100%', textAlign: 'center', marginTop: '8px' }} >

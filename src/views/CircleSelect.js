@@ -135,11 +135,13 @@ function CircleSelectView({ models, history, params }) {
                           {!productInfo_.name
                             ? <CircleCard
                                 key={`_${circleId_}_${productId}_item_${index}`}
+                                isCurrent={circleInfo && circleInfo.id ==  circleId_}
                                 models={models}
                                 circleInfo={circleInfo_}
                               />
                             : <ProductCard
                                 key={`_${circleId_}_${productId}_item_${index}`}
+                                isCurrent={productInfo && productInfo.id ==  productId_}
                                 models={models}
                                 circleInfo={circleInfo_}
                                 productInfo={productInfo_}

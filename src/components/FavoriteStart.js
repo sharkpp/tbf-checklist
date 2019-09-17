@@ -8,7 +8,7 @@ import { faStar as faStarChecked } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarUnchecked } from '@fortawesome/free-regular-svg-icons'
 
 // 製品表示用
-function FavoriteStar({ models, circleId, productId }) {
+function FavoriteStar({ models, circleId, productId, isCurrent }) {
   const { favorite } = models;
 
   const [ favorited,  setFavorited ] = useState(favorite.isFavorite(circleId, productId));
@@ -23,12 +23,12 @@ function FavoriteStar({ models, circleId, productId }) {
       }
     };
     // 通知先を登録
-    favorite.on('change',onFavoriteChange);
+    isCurrent && favorite.on('change',onFavoriteChange);
     // クリーンアップ関数を返す
     return () => {
-      favorite.off('change',onFavoriteChange);
+      isCurrent && favorite.off('change',onFavoriteChange);
     };
-  }, [favorite, circleId, productId]);
+  }, [isCurrent, favorite, circleId, productId]);
 
   return (
     <div style={{
