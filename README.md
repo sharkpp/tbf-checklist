@@ -1,5 +1,9 @@
 # サークルリスト for Techbook Fest
 
+[![Actions Status](https://github.com/sharkpp/tbf-checklist/workflows/gh-pages/badge.svg)](https://github.com/sharkpp/tbf-checklist/actions)  
+
+[チェックリスト](https://sharkpp.github.io/tbf-checklist/)  
+
 ## 利用可能なスクリプト
 
 プロジェクトディレクトリで、次を実行できます:
