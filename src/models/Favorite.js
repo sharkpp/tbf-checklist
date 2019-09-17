@@ -2,6 +2,8 @@
 
 const EventEmitter = require('events');
 
+const KeyLocalStorage = 'favorite';
+
 export default class FavoriteModel {
 
   constructor() {
@@ -10,8 +12,7 @@ export default class FavoriteModel {
     this._event = new EventEmitter();
 
     // 保持している情報
-    this._store = {
-    };
+    this._store = JSON.parse(localStorage.getItem(KeyLocalStorage) || '{}');
   }
 
   // 通知を登録
@@ -37,7 +38,10 @@ export default class FavoriteModel {
       const key = productId ? productId : 'circle';
       const updated = true !== this._store[circleId][key];
       this._store[circleId][key] = true;
-      updated && this._event.emit('change', { circleId: circleId, productId: productId, favorite: true });
+      if (updated) {
+        localStorage.setItem(KeyLocalStorage, JSON.stringify(this._store));
+        this._event.emit('change', { circleId: circleId, productId: productId, favorite: true });
+      }
     }
   }
 
@@ -45,9 +49,12 @@ export default class FavoriteModel {
     if (circleId) {
       this._store[circleId] = this._store[circleId] || { 'circle': null };
       const key = productId ? productId : 'circle';
-      const updated = false !== this._store[circleId][key];
-      this._store[circleId][key] = false;
-      updated && this._event.emit('change', { circleId: circleId, productId: productId, favorite: false });
+      const updated = true === this._store[circleId][key];
+      delete this._store[circleId][key];
+      if (updated) {
+        localStorage.setItem(KeyLocalStorage, JSON.stringify(this._store));
+        this._event.emit('change', { circleId: circleId, productId: productId, favorite: false });
+      }
     }
   }
 
