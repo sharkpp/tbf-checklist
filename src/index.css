@@ -17,45 +17,9 @@ code {
     monospace;
 }
 
-.circle-list {
-  height: 100% !important;
-}
-.circle-list > .carousel__back-button,
-.circle-list > .carousel__next-button {
-  margin-top: 75px;
-  height: calc(100% - 150px) !important;
-}
-.circle-list > .carousel__back-button,
-.circle-list > .carousel__next-button {
-  position: absolute;
-  top: 0;
-}
-.circle-list > .carousel__back-button {
-  left: 0;
-}
-.circle-list > .carousel__next-button {
-  right: 0;
-}
-
-.product-list {
-  height: 100% !important;
-}
-.product-list > .carousel__back-button {
-  margin-left: 75px;
-  width: calc(100% - 150px) !important;
-  position: absolute;
-  left: 0;
-}
-.product-list > .carousel__next-button {
-  width: 100% !important;
-  position: absolute;
-  left: 0;
-}
-.product-list > .carousel__back-button {
-  top: 0;
-}
-.product-list > .carousel__next-button {
-  bottom: 0;
+.card-container {
+  width: 100%;
+  height: 100%;
 }
 
 .circle-card,
@@ -105,4 +69,45 @@ code {
 .circle-card  .form-group,
 .product-card .form-group {
   margin-bottom: 0;
+}
+
+.btn-hidden {
+  display: none;
+}
+
+.circle-prev {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: calc(100% - 75px * 2);
+  min-width: 75px;
+  width: 10%;
+  margin-top: 75px;
+}
+.circle-next {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: calc(100% - 75px * 2);
+  min-width: 75px;
+  width: 10%;
+  margin-top: 75px;
+}
+.product-prev {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% - 75px * 2);
+  min-height: 75px;
+  height: 10%;
+  margin-left: 75px;
+}
+.product-next {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: calc(100% - 75px * 2);
+  min-height: 75px;
+  height: 10%;
+  margin-left: 75px;
 }

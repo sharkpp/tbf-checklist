@@ -71,7 +71,7 @@ export default class CircleModel {
       this._store.loadCompleted = false;
       this._updateCache();
       reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&eventExhibitCourseID=3&visibility=site&limit=100&onlyAdoption=true`);
-      reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&visibility=site&limit=100&onlyAdoption=true`);
+      //reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&visibility=site&limit=100&onlyAdoption=true`);
     }
 
     // 情報を要求
@@ -206,6 +206,18 @@ export default class CircleModel {
       false === this._waitCircleList &&
       this.getCircleByBooth(this._store.orderBy.booth[this._store.orderBy.booth.length - 1])
     );
+  }
+
+  // 前のサークルがあるか？
+  hasPrevSiblingsBooth(circleId) {
+    const circleInfo = this._store.circles[circleId];
+    return !!(circleInfo && circleInfo.prevCircleExhibitInfoID);
+  }
+
+  // 次のサークルがあるか？
+  hasNextSiblingsBooth(circleId) {
+    const circleInfo = this._store.circles[circleId];
+    return !!(circleInfo && circleInfo.nextCircleExhibitInfoID);
   }
 
   // 前のサークルを取得

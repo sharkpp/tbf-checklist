@@ -122,6 +122,14 @@ export default class ProductModel {
     return orderBySeq ? orderBySeq.length : -1;
   }
 
+  // 次の製品を取得
+  hasNextProduct(circleId, productId) {
+    const products   = this._store.products[circleId];
+    const orderBySeq = this._store.orderBy.seq[circleId];
+    const indexBySeq = orderBySeq && orderBySeq.indexOf(productId);
+    return !!(orderBySeq && orderBySeq[indexBySeq + 1]);
+  }
+
   // 前の製品を取得
   getPrevSiblings(circleId, productId) {
     const products   = this._store.products[circleId];

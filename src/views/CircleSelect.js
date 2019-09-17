@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 
+import { Button } from 'react-bootstrap';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
-
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
-import 'pure-react-carousel/dist/react-carousel.es.css';
 
 import CircleCard from '../components/CircleCard'
 import ProductCard from '../components/ProductCard'
@@ -102,108 +101,76 @@ function CircleSelectView({ models, history, params }) {
   const productList_ = [null].concat(productList || []);
   const curProductIndex = product.getProductOrder(circleId, productId)+1;
 
-  //console.log('>>>>',[circleList,circleId,circleInfo,productList,productId,productInfo,product.getProductOrder(circleId, productId)]);
-  return (
-    <CarouselProvider
-        className='circle-list'
-        naturalSlideWidth={window.innerWidth}
-        naturalSlideHeight={window.innerHeight}
-        totalSlides={circleList_.length}
-        currentSlide={curCircleIndex}
-      >
-        <Slider>
-          {circleList_.map((circleId_, index) => {
-            const isCurrentCircle = circleInfo && circleInfo.id ===  circleId_;
-            const circleInfo_     = isCurrentCircle ? circleInfo : { id: circleId_ };
-            return (
-              <Slide key={`_${circleId_}_${index}`} index={index}>
-                <CarouselProvider
-                  orientation='vertical'
-                  key={`_${circleId_}_carousel_${index}`}
-                  className='product-list'
-                  naturalSlideWidth={window.innerWidth}
-                  naturalSlideHeight={window.innerHeight}
-                  totalSlides={productList_.length}
-                  currentSlide={curProductIndex}
-                >
-                  <Slider>
-                    {productList_.map((productId_, index) => {
-                      //console.log('>>',[(circleInfo||{}).id,circleId_,circleId]);
-                      const isCurrentProduct = isCurrentCircle && productInfo && productInfo.id ===  productId_;
-                      const productInfo_     = isCurrentProduct ? productInfo : { id: productId_ };
-                      return (
-                        <Slide key={`_${circleId_}_${productId}_${index}`} index={index}>
-                          {!productInfo_.name
-                            ? <CircleCard
-                                key={`_${circleId_}_${productId}_item_${index}`}
-                                isCurrent={isCurrentCircle}
-                                models={models}
-                                circleInfo={circleInfo_}
-                              />
-                            : <ProductCard
-                                key={`_${circleId_}_${productId}_item_${index}`}
-                                isCurrent={isCurrentProduct}
-                                models={models}
-                                circleInfo={circleInfo_}
-                                productInfo={productInfo_}
-                              />
-                          }
-                        </Slide>
-                      );
-                    })}
-                  </Slider>
-                  <ButtonBack
-                    style={curProductIndex - 1 < 0 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
-                    onClick={() => {//console.log('ButtonTop');
-                      const prevProduct = product.getPrevSiblings(circleId, productId);
-                      history.push(
-                        prevProduct
-                          ? `/${event}/circle/${circleId}/${prevProduct.id}`
-                          : `/${event}/circle/${circleId}`
-                        );
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faAngleUp} color={"black"} size="3x"  />
-                  </ButtonBack>
-                  <ButtonNext
-                    style={productList_.length <= curProductIndex + 1 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
-                    onClick={() => {//console.log('ButtonButton');
-                      const nextProduct = product.getNextSiblings(circleId, productId);
-                      history.push(
-                        nextProduct
-                          ? `/${event}/circle/${circleId}/${nextProduct.id}`
-                          : `/${event}/circle/${circleId}`
-                        );
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faAngleDown} color={"black"} size="3x" />
-                  </ButtonNext>
-                </CarouselProvider>
-              </Slide>
-            );
-          })}
-        </Slider>
-        <ButtonBack
-          style={curCircleIndex - 1 < 0 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
-          onClick={() => {//console.log('ButtonBack');
-            const prevCircle = circle.getPrevSiblingsBooth(circleId);
-            history.push(`/${event}/circle/${prevCircle.id}`);
-          }}
-        >
-          <FontAwesomeIcon icon={faAngleLeft} color={"black"} size="3x"  />
-        </ButtonBack>
-        <ButtonNext
-          style={circleList_.length <= curCircleIndex + 1 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
-          onClick={() => {//console.log('ButtonNext');
-            const nextCircle = circle.getNextSiblingsBooth(circleId);
-            history.push(`/${event}/circle/${nextCircle.id}`);
-          }}
-        >
-          <FontAwesomeIcon icon={faAngleRight} color={"black"} size="3x" />
-        </ButtonNext>
-      </CarouselProvider>
-  );
+  const circleInfo_  = circleInfo  || { id: circleId };
+  const productInfo_ = productInfo || { id: productId };
 
+  return (
+    <div className="card-container">
+      {!productInfo || !productInfo.name
+        ? <CircleCard
+            key={`_${circleId}`}
+            isCurrent={true}
+            models={models}
+            circleInfo={circleInfo_}
+          />
+        : <ProductCard
+            key={`_${circleId}_${productId}`}
+            isCurrent={true}
+            models={models}
+            circleInfo={circleInfo_}
+            productInfo={productInfo_}
+          />
+      }
+      <Button
+        variant="link"
+        className={"circle-prev"+(circle.hasPrevSiblingsBooth(circleId)?'':' btn-hidden')}
+        onClick={() => {//console.log('ButtonBack');
+          const prevCircle = circle.getPrevSiblingsBooth(circleId);
+          history.push(`/${event}/circle/${prevCircle.id}`);
+        }}
+      >
+        <FontAwesomeIcon icon={faAngleLeft} color={"black"} size="3x" />
+      </Button>
+      <Button
+        variant="link"
+        className={"circle-next"+(circle.hasNextSiblingsBooth(circleId)?'':' btn-hidden')}
+        onClick={() => {//console.log('ButtonNext');
+          const nextCircle = circle.getNextSiblingsBooth(circleId);
+          history.push(`/${event}/circle/${nextCircle.id}`);
+        }}
+      >
+        <FontAwesomeIcon icon={faAngleRight} color={"black"} size="3x" />
+      </Button>
+      <Button
+        variant="link"
+        className={"product-prev"+(productId?'':' btn-hidden')}
+        onClick={() => {//console.log('ButtonTop');
+          const prevProduct = product.getPrevSiblings(circleId, productId);
+          history.push(
+            prevProduct
+              ? `/${event}/circle/${circleId}/${prevProduct.id}`
+              : `/${event}/circle/${circleId}`
+            );
+        }}
+      >
+        <FontAwesomeIcon icon={faAngleUp} color={"black"} size="3x" />
+      </Button>
+      <Button
+        variant="link"
+        className={"product-next"+(product.hasNextProduct(circleId,productId)?'':' btn-hidden')}
+        onClick={() => {//console.log('ButtonButton');
+          const nextProduct = product.getNextSiblings(circleId, productId);
+          history.push(
+            nextProduct
+              ? `/${event}/circle/${circleId}/${nextProduct.id}`
+              : `/${event}/circle/${circleId}`
+            );
+        }}
+      >
+        <FontAwesomeIcon icon={faAngleDown} color={"black"} size="3x" />
+      </Button>
+    </div>
+  );
 }
 
 export default CircleSelectView;
