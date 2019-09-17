@@ -209,32 +209,26 @@ export default class CircleModel {
   }
 
   // 前のサークルがあるか？
-  hasPrevSiblingsBooth(circleId) {
+  hasPrevCircle(circleId) {
     const circleInfo = this._store.circles[circleId];
     return !!(circleInfo && circleInfo.prevCircleExhibitInfoID);
   }
 
   // 次のサークルがあるか？
-  hasNextSiblingsBooth(circleId) {
+  hasNextCircle(circleId) {
     const circleInfo = this._store.circles[circleId];
     return !!(circleInfo && circleInfo.nextCircleExhibitInfoID);
   }
 
   // 前のサークルを取得
-  getPrevSiblingsBooth(circleId) {
+  getPrevCircle(circleId) {
     const circleInfo = this._store.circles[circleId];
     return circleInfo && circleInfo.prevCircleExhibitInfoID && this._store.circles[circleInfo.prevCircleExhibitInfoID];
-    //const boothNo = ((circleInfo||{}).spaces||[])[0]; // ToDo:配置が複数あり連続していない場合は... ループしそう...
-    //const orderIndex = this._store.orderBy.booth.indexOf(boothNo);
-    //return false === this._waitCircleList && this.getCircleByBooth(this._store.orderBy.booth[orderIndex - 1]);
   }
 
   // 次のサークルを取得
-  getNextSiblingsBooth(circleId) {
+  getNextCircle(circleId) {
     const circleInfo = this._store.circles[circleId];
     return circleInfo && circleInfo.nextCircleExhibitInfoID && this._store.circles[circleInfo.nextCircleExhibitInfoID];
-    //const boothNo = ((circleInfo||{}).spaces||[])[0]; // ToDo:配置が複数あり連続していない場合は... ループしそう...
-    //const orderIndex = this._store.orderBy.booth.indexOf(boothNo);
-    //return false === this._waitCircleList && this.getCircleByBooth(this._store.orderBy.booth[orderIndex + 1]);
   }
 }

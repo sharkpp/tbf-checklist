@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { Button } from 'react-bootstrap';
+import { Button, Spinner } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
@@ -103,44 +103,54 @@ function CircleSelectView({ models, history, params }) {
 
   const circleInfo_  = circleInfo  || { id: circleId };
   const productInfo_ = productInfo || { id: productId };
+//console.log(circleInfo,productInfo);
 
   return (
     <div className="card-container">
-      {!productInfo || !productInfo.name
-        ? <CircleCard
-            key={`_${circleId}`}
-            isCurrent={true}
-            models={models}
-            circleInfo={circleInfo_}
-          />
-        : <ProductCard
-            key={`_${circleId}_${productId}`}
-            isCurrent={true}
-            models={models}
-            circleInfo={circleInfo_}
-            productInfo={productInfo_}
-          />
-      }
+      {[
+        <div className="loading">
+          <Spinner animation="border" />
+        </div>,
+        <CircleCard
+          key={`_${circleId}`}
+          isCurrent={true}
+          models={models}
+          circleInfo={circleInfo_}
+        />,
+        <ProductCard
+          key={`_${circleId}_${productId}`}
+          isCurrent={true}
+          models={models}
+          circleInfo={circleInfo_}
+          productInfo={productInfo_}
+        />
+      ][
+        !circleInfo ? 0 : (!productInfo || !productInfo.name ? 1 : 2)
+      ]}
+
       <Button
         variant="link"
-        className={"circle-prev"+(circle.hasPrevSiblingsBooth(circleId)?'':' btn-hidden')}
+        className={"circle-prev"+(circleInfo&&circle.hasPrevCircle(circleId)?'':' btn-hidden')}
         onClick={() => {//console.log('ButtonBack');
-          const prevCircle = circle.getPrevSiblingsBooth(circleId);
-          history.push(`/${event}/circle/${prevCircle.id}`);
+          const prevCircle = circle.getPrevCircle(circleId);
+          prevCircle && prevCircle.id && history.push(`/${event}/circle/${prevCircle.id}`);
         }}
       >
         <FontAwesomeIcon icon={faAngleLeft} color={"black"} size="3x" />
       </Button>
+
       <Button
         variant="link"
-        className={"circle-next"+(circle.hasNextSiblingsBooth(circleId)?'':' btn-hidden')}
+        className={"circle-next"+(circleInfo&&circle.hasNextCircle(circleId)?'':' btn-hidden')}
         onClick={() => {//console.log('ButtonNext');
-          const nextCircle = circle.getNextSiblingsBooth(circleId);
-          history.push(`/${event}/circle/${nextCircle.id}`);
+          const nextCircle = circle.getNextCircle(circleId);console.log(nextCircle);
+          nextCircle && nextCircle.id && history.push(`/${event}/circle/${nextCircle.id}`);
         }}
       >
         <FontAwesomeIcon icon={faAngleRight} color={"black"} size="3x" />
       </Button>
+
+
       <Button
         variant="link"
         className={"product-prev"+(productId?'':' btn-hidden')}
@@ -155,6 +165,7 @@ function CircleSelectView({ models, history, params }) {
       >
         <FontAwesomeIcon icon={faAngleUp} color={"black"} size="3x" />
       </Button>
+
       <Button
         variant="link"
         className={"product-next"+(product.hasNextProduct(circleId,productId)?'':' btn-hidden')}
@@ -169,6 +180,7 @@ function CircleSelectView({ models, history, params }) {
       >
         <FontAwesomeIcon icon={faAngleDown} color={"black"} size="3x" />
       </Button>
+
     </div>
   );
 }
