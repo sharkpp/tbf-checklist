@@ -53,14 +53,14 @@ export default class CircleModel {
     else {
       this._waitCircleList = reqCircleList = true;
       reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&eventExhibitCourseID=3&visibility=site&limit=100&onlyAdoption=true`);
-      reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&visibility=site&limit=100&onlyAdoption=true`);
+      //reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&visibility=site&limit=100&onlyAdoption=true`);
     }
 
     // 情報を要求
     const req = () => {
       const reqUrl = reqUrls.shift();
       if (!reqUrl) { // 取得完了
-        if (reqCircleList) { console.log('CircleModel request comp!');
+        if (reqCircleList) { //console.log('CircleModel request comp!');
           this._waitCircleList = false;
         }
         this._event.emit('change');
@@ -76,14 +76,14 @@ export default class CircleModel {
             reqUrls.unshift(`${reqUrl.replace(/&cursor=.+$/,'')}&cursor=${data.cursor}`);
           }
 
-          console.log('CircleModel request',data);
+          //console.log('CircleModel request',data);
 
           if (!data.list) {
             const circleInfo = data;
             // サークル情報更新
             this._store.circles[circleInfo.id] = circleInfo;
             // 配置からサークルIdを引くための情報を更新
-            for (let j = 0, space; space = circleInfo.spaces[j]; ++j) {
+            for (let j = 0, space; undefined !== (space = circleInfo.spaces[j]); ++j) {
               this._store.lookupBy.booth[space] = circleInfo.id;
               if (this._store.orderBy.booth.indexOf(space) < 0) {
                 this._store.orderBy.booth.push(space);
@@ -91,11 +91,11 @@ export default class CircleModel {
             }
           }
           else {
-            for (let i = 0, circleInfo; circleInfo = data.list[i]; ++i) {
+            for (let i = 0, circleInfo; undefined !== (circleInfo = data.list[i]); ++i) {
               // サークル情報更新
               this._store.circles[circleInfo.id] = circleInfo;
               // 配置からサークルIdを引くための情報を更新
-              for (let j = 0, space; space = circleInfo.spaces[j]; ++j) {
+              for (let j = 0, space; undefined !== (space = circleInfo.spaces[j]); ++j) {
                 this._store.lookupBy.booth[space] = circleInfo.id;
                 if (this._store.orderBy.booth.indexOf(space) < 0) {
                   this._store.orderBy.booth.push(space);

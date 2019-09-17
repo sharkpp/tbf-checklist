@@ -10,7 +10,7 @@ import FavoriteStart from './FavoriteStart'
 
 // サークル表示用
 function CircleCard({ models, circleInfo, isCurrent }) {
-  const circleCut = circleInfo && circleInfo.circleCutImage || { url: '', width: 0, height: 1 };
+  const circleCut = (circleInfo && circleInfo.circleCutImage) || { url: '', width: 0, height: 1 };
   return (
     <div className='circle-card'>
       <Card >
@@ -54,7 +54,7 @@ function CircleCard({ models, circleInfo, isCurrent }) {
               </Form.Group>
               <Form.Group controlId="spaces">
                 <Form.Label>配置</Form.Label>
-                <div className='form-control-plaintext' >{circleInfo.spaces&&circleInfo.spaces[0]||''}</div>
+                <div className='form-control-plaintext' >{(circleInfo.spaces&&circleInfo.spaces[0])||''}</div>
               </Form.Group>
               <Form.Group controlId="penName">
                 <Form.Label>ペンネーム</Form.Label>

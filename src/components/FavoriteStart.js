@@ -13,12 +13,13 @@ function FavoriteStar({ models, circleId, productId, isCurrent }) {
 
   const [ favorited,  setFavorited ] = useState(favorite.isFavorite(circleId, productId));
 
-  const setFavorite   = useCallback(() => favorite.setFavorite(circleId, productId), []);
-  const unsetFavorite = useCallback(() => favorite.unsetFavorite(circleId, productId), []);
+  const setFavorite   = useCallback(() => favorite.setFavorite  (circleId, productId), [favorite, circleId, productId]);
+  const unsetFavorite = useCallback(() => favorite.unsetFavorite(circleId, productId), [favorite, circleId, productId]);
 
   useEffect(() => {//console.log('CircleSelectView','useEffect');
     const onFavoriteChange = (params) => {
-      if (circleId == params.circleId && productId == params.productId) {
+      if (circleId  === params.circleId &&
+          productId === params.productId) {
         setFavorited(params.favorite);
       }
     };

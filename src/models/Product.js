@@ -25,7 +25,6 @@ export default class ProductModel {
     options = options || {};
     options.circleId = options.circleId || null;
 
-    const eventId = 'tbf07';
     let reqUrls = [];
     let reqProductList = false;
 
@@ -59,7 +58,7 @@ export default class ProductModel {
           //console.log('ProductModel request',data);
 
           if (data.list) {
-            for (let i = 0, productInfo; productInfo = data.list[i]; ++i) {
+            for (let i = 0, productInfo; undefined !== (productInfo = data.list[i]); ++i) {
               // サークル情報更新
               const circleId = productInfo.circleExhibitInfoID;
               this._store.products[circleId] = this._store.products[circleId] || {};
@@ -128,7 +127,7 @@ export default class ProductModel {
     const products   = this._store.products[circleId];
     const orderBySeq = this._store.orderBy.seq[circleId];
     const indexBySeq = orderBySeq && orderBySeq.indexOf(productId);
-    return orderBySeq && products[orderBySeq[indexBySeq - 1]] || false;
+    return (orderBySeq && products[orderBySeq[indexBySeq - 1]]) || false;
   }
 
   // 次の製品を取得
@@ -136,7 +135,7 @@ export default class ProductModel {
     const products   = this._store.products[circleId];
     const orderBySeq = this._store.orderBy.seq[circleId];
     const indexBySeq = orderBySeq && orderBySeq.indexOf(productId);
-    return orderBySeq && products[orderBySeq[indexBySeq + 1]] || false;
+    return (orderBySeq && products[orderBySeq[indexBySeq + 1]]) || false;
   }
 
 }

@@ -1,7 +1,6 @@
 "use struct";
 
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
@@ -33,7 +32,7 @@ function CircleSelectView({ models, history, params }) {
     const productList_ = product.getProductList(circleId);
     productList_ ? setProductList(productList)
                  : product.request({ circleId: circleId });
-  }, [circle, circleId]);
+  }, [circle, circleId, product, productList]);
 
   useEffect(() => {
     if (circleId) {
@@ -114,7 +113,8 @@ function CircleSelectView({ models, history, params }) {
       >
         <Slider>
           {circleList_.map((circleId_, index) => {
-            const circleInfo_ = circleInfo && circleInfo.id ==  circleId_ ? circleInfo : { id: circleId_ };
+            const isCurrentCircle = circleInfo && circleInfo.id ===  circleId_;
+            const circleInfo_     = isCurrentCircle ? circleInfo : { id: circleId_ };
             return (
               <Slide key={`_${circleId_}_${index}`} index={index}>
                 <CarouselProvider
@@ -129,19 +129,20 @@ function CircleSelectView({ models, history, params }) {
                   <Slider>
                     {productList_.map((productId_, index) => {
                       //console.log('>>',[(circleInfo||{}).id,circleId_,circleId]);
-                      const productInfo_ = productInfo && productInfo.id ==  productId_ ? productInfo : { id: productId_ };
+                      const isCurrentProduct = productInfo && productInfo.id ===  productId_;
+                      const productInfo_     = isCurrentProduct ? productInfo : { id: productId_ };
                       return (
                         <Slide key={`_${circleId_}_${productId}_${index}`} index={index}>
                           {!productInfo_.name
                             ? <CircleCard
                                 key={`_${circleId_}_${productId}_item_${index}`}
-                                isCurrent={circleInfo && circleInfo.id ==  circleId_}
+                                isCurrent={isCurrentCircle}
                                 models={models}
                                 circleInfo={circleInfo_}
                               />
                             : <ProductCard
                                 key={`_${circleId_}_${productId}_item_${index}`}
-                                isCurrent={productInfo && productInfo.id ==  productId_}
+                                isCurrent={isCurrentProduct}
                                 models={models}
                                 circleInfo={circleInfo_}
                                 productInfo={productInfo_}

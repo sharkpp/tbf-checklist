@@ -15,7 +15,7 @@ const Type2Text = {
 
 // 製品表示用
 function ProductCard({ models, circleInfo, productInfo, isCurrent }) {
-  const firstImage = productInfo && productInfo.images && productInfo.images[0] || { url: '', width: 0, height: 1 };
+  const firstImage = (productInfo && productInfo.images && productInfo.images[0]) || { url: '', width: 0, height: 1 };
   return (
     <div className='product-card'>
       <Card >

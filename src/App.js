@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { HashRouter as Router, Route, Link } from "react-router-dom";
-import logo from './logo.svg';
 import './App.css';
 import EventSelectView  from './views/EventSelect';
 import CircleSelectView from './views/CircleSelect';
