@@ -18,9 +18,12 @@ code {
 }
 
 .circle-list,
-.circle-list > .carousel__back-button,
-.circle-list > .carousel__next-button {
+.circle-list > .carousel__back-button {
   height: 100% !important;
+}
+.circle-list > .carousel__next-button {
+  margin-top: 75px;
+  height: calc(100% - 75px) !important;
 }
 .circle-list > .carousel__back-button,
 .circle-list > .carousel__next-button {
