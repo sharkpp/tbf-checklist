@@ -129,7 +129,7 @@ function CircleSelectView({ models, history, params }) {
                   <Slider>
                     {productList_.map((productId_, index) => {
                       //console.log('>>',[(circleInfo||{}).id,circleId_,circleId]);
-                      const isCurrentProduct = productInfo && productInfo.id ===  productId_;
+                      const isCurrentProduct = isCurrentCircle && productInfo && productInfo.id ===  productId_;
                       const productInfo_     = isCurrentProduct ? productInfo : { id: productId_ };
                       return (
                         <Slide key={`_${circleId_}_${productId}_${index}`} index={index}>

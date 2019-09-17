@@ -24,11 +24,15 @@ function FavoriteStar({ models, circleId, productId, isCurrent }) {
       }
     };
     // 通知先を登録
-    isCurrent && favorite.on('change',onFavoriteChange);
+    if (isCurrent) {
+      favorite.on('change',onFavoriteChange);
+      //console.log('fav on',[circleId, productId]);
+    }
     // クリーンアップ関数を返す
-    return () => {
-      isCurrent && favorite.off('change',onFavoriteChange);
-    };
+    return isCurrent ? (() => {
+      favorite.off('change',onFavoriteChange);
+      //console.log('fav off',[circleId, productId]);
+    }) : (() => {});
   }, [isCurrent, favorite, circleId, productId]);
 
   return (
