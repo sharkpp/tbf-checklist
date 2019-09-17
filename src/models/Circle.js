@@ -2,7 +2,7 @@
 
 const EventEmitter = require('events');
 
-const Endpoint = 'https://cors-anywhere.herokuapp.com/https://techbookfest.org/api';
+const Endpoint = 'https://api-gw98.herokuapp.com/https://techbookfest.org/api';
 
 const BoothToken = /^(.+?)([0-9]+)(.*)$/; // 配置を、種別、番号、フロア に分割するための正規表現
 

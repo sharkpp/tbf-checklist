@@ -2,7 +2,7 @@
 
 const EventEmitter = require('events');
 
-const Endpoint = 'https://cors-anywhere.herokuapp.com/https://techbookfest.org/api';
+const Endpoint = 'https://api-gw98.herokuapp.com/https://techbookfest.org/api';
 
 export default class ProductModel {
 
