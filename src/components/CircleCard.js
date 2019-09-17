@@ -44,7 +44,9 @@ function CircleCard({ models, circleInfo }) {
           </div>}
         </div>
         <Card.Body>
-          <Card.Text>
+          <div className='card-text'
+            // Card.Text だと "<div> cannot appear as a descendant of <p>" が出る
+          >
             <Form>
               <Form.Group controlId="name">
                 <Form.Label>サークル名</Form.Label>
@@ -71,7 +73,7 @@ function CircleCard({ models, circleInfo }) {
                 <div className='form-control-plaintext' >{circleInfo.genreFreeFormat}</div>
               </Form.Group>
             </Form>
-          </Card.Text>
+          </div>
         </Card.Body>
       </Card>
     </div>

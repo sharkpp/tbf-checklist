@@ -39,7 +39,9 @@ function ProductCard({ models, circleInfo, productInfo }) {
           />}
         </div>
         <Card.Body>
-          <Card.Text>
+          <div className='card-text'
+            // Card.Text だと "<div> cannot appear as a descendant of <p>" が出る
+          >
             <Form>
             <Form.Group controlId="name">
                   <Form.Label>頒布物</Form.Label>
@@ -58,7 +60,7 @@ function ProductCard({ models, circleInfo, productInfo }) {
                   <pre className='form-control-plaintext' >{productInfo.description}</pre>
                 </Form.Group>
               </Form>
-          </Card.Text>
+          </div>
         </Card.Body>
       </Card>
     </div>
