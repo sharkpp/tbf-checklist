@@ -12,10 +12,13 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import CircleCard from '../components/CircleCard'
 import ProductCard from '../components/ProductCard'
 
+const CarouselButtonNormalStyle = { background: 'transparent', border: '0px solid transparent' };
+const CarouselButtonHiddenStyle = Object.assign({ display: 'none' }, CarouselButtonNormalStyle);
+
 function CircleSelectView({ models, history, params }) {
   const { circle, product } = models;
   const { event, circleId, productId } = params;
-  console.log('CircleSelectView',{models, history, params});
+  //console.log('CircleSelectView',{models, history, params});
 
   const [ circleList,  setCircleList  ] = useState();
   const [ circleInfo,  setCircleInfo  ] = useState();
@@ -42,7 +45,7 @@ function CircleSelectView({ models, history, params }) {
 
   useEffect(() => {//console.log('CircleSelectView','useEffect');
     const onCircleChange = () => {
-      console.log('CircleSelectView','onCircleChange',circleId,circle.getCircle(circleId));
+      //console.log('CircleSelectView','onCircleChange',circleId,circle.getCircle(circleId));
       if (!circleId) {
         // サークルを選択していない場合は一番初めのサークルの飛ぶ
         const firstCircleInfo = circle.getFirstBooth();
@@ -59,7 +62,7 @@ function CircleSelectView({ models, history, params }) {
       }
     };
     const onCircleLoaded = () => {
-      console.log('CircleSelectView','onCircleLoaded',circleId,circle.getCircle(circleId));
+      //console.log('CircleSelectView','onCircleLoaded',circleId,circle.getCircle(circleId));
       // サークルの製品を取得
         setCircleList(circle.getCircleListOrderByBooth());
         setCircleInfo(circle.getCircle(circleId));
@@ -67,12 +70,12 @@ function CircleSelectView({ models, history, params }) {
         setProductInfo(product.getProduct(circleId, productId));
     };
     const onProductChange = () => {
-      console.log('CircleSelectView','onProductChange',circleId,productId,product.getProduct(circleId, productId));
+      //console.log('CircleSelectView','onProductChange',circleId,productId,product.getProduct(circleId, productId));
       setProductList(product.getProductList(circleId));
       setProductInfo(product.getProduct(circleId, productId));
     };
     const onProductLoaded = () => {
-      console.log('CircleSelectView','onProductLoaded',circleId,productId,product.getProduct(circleId, productId));
+      //console.log('CircleSelectView','onProductLoaded',circleId,productId,product.getProduct(circleId, productId));
       setProductList(product.getProductList(circleId));
       setProductInfo(product.getProduct(circleId, productId));
     };
@@ -109,7 +112,7 @@ function CircleSelectView({ models, history, params }) {
         totalSlides={circleList_.length}
         currentSlide={curCircleIndex}
       >
-        <Slider>
+        <Slider onMasterSpinner={(...args)=>{console.log('>>>',args);}} >
           {circleList_.map((circleId_, index) => {
             const circleInfo_ = circleInfo && circleInfo.id ==  circleId_ ? circleInfo : { id: circleId_ };
             return (
@@ -147,7 +150,7 @@ function CircleSelectView({ models, history, params }) {
                     })}
                   </Slider>
                   <ButtonBack
-                    style={curProductIndex - 1 < 0 ? { display: 'none' } : {}}
+                    style={curProductIndex - 1 < 0 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
                     onClick={() => {console.log('ButtonTop');
                       const prevProduct = product.getPrevSiblings(circleId, productId);
                       history.push(
@@ -160,7 +163,7 @@ function CircleSelectView({ models, history, params }) {
                     <FontAwesomeIcon icon={faAngleUp} color={"black"} size="3x"  />
                   </ButtonBack>
                   <ButtonNext
-                    style={productList_.length <= curProductIndex + 1 ? { display: 'none' } : {}}
+                    style={productList_.length <= curProductIndex + 1 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
                     onClick={() => {console.log('ButtonButton');
                       const nextProduct = product.getNextSiblings(circleId, productId);
                       history.push(
@@ -178,7 +181,7 @@ function CircleSelectView({ models, history, params }) {
           })}
         </Slider>
         <ButtonBack
-          style={curCircleIndex - 1 < 0 ? { display: 'none' } : {}}
+          style={curCircleIndex - 1 < 0 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
           onClick={() => {console.log('ButtonBack');
             const prevCircle = circle.getPrevSiblingsBooth(circleId);
             history.push(`/${event}/circle/${prevCircle.id}`);
@@ -187,7 +190,7 @@ function CircleSelectView({ models, history, params }) {
           <FontAwesomeIcon icon={faAngleLeft} color={"black"} size="3x"  />
         </ButtonBack>
         <ButtonNext
-          style={circleList_.length <= curCircleIndex + 1 ? { display: 'none' } : {}}
+          style={circleList_.length <= curCircleIndex + 1 ? CarouselButtonHiddenStyle : CarouselButtonNormalStyle}
           onClick={() => {console.log('ButtonNext');
             const nextCircle = circle.getNextSiblingsBooth(circleId);
             history.push(`/${event}/circle/${nextCircle.id}`);
