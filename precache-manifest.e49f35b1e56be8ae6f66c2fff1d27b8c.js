@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2b15049cd69d896540f69c6f1f50131b",
+    "revision": "f60aa8a952ea8761ed77a625ac332ec4",
     "url": "/tbf-checklist/index.html"
   },
   {
@@ -8,16 +8,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tbf-checklist/static/css/2.d8362722.chunk.css"
   },
   {
-    "revision": "f0dec383853e8320b5d3",
-    "url": "/tbf-checklist/static/css/main.6379cfaa.chunk.css"
+    "revision": "3c48dccc584ae26d1cc4",
+    "url": "/tbf-checklist/static/css/main.44a82a0d.chunk.css"
   },
   {
     "revision": "6c8fa2d56acf74df30b6",
     "url": "/tbf-checklist/static/js/2.dc71c57e.chunk.js"
   },
   {
-    "revision": "f0dec383853e8320b5d3",
-    "url": "/tbf-checklist/static/js/main.10ef6983.chunk.js"
+    "revision": "3c48dccc584ae26d1cc4",
+    "url": "/tbf-checklist/static/js/main.af4cedb4.chunk.js"
   },
   {
     "revision": "6b77a36ddd2b609ef1a7",
