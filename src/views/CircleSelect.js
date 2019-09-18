@@ -35,6 +35,11 @@ function CircleSelectView({ models, history, params }) {
     history.push(`/fav/import`);
   }, [favorite, history]);
 
+  const handleClearCache = useCallback(() => {
+    circle.clearCache();
+    product.clearCache();
+  }, [circle, product]);
+
   useEffect(() => {
     const circleInfo_ = circle.getCircle(circleId);
     circleInfo_ ? setCircleInfo(circleInfo_)
@@ -137,6 +142,8 @@ function CircleSelectView({ models, history, params }) {
           <Dropdown.Divider />
           <Dropdown.Item eventKey="2" onSelect={handleFavoriteSave}>お気に入りをエクスポート</Dropdown.Item>
           <Dropdown.Item eventKey="3" onSelect={handleFavoriteLoad}>お気に入りをインポート</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item eventKey="3" onSelect={handleClearCache}>キャッシュをクリア</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 

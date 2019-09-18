@@ -4,6 +4,8 @@ const EventEmitter = require('events');
 
 const Endpoint = 'https://api-gw98.herokuapp.com/https://techbookfest.org/api';
 
+const KeyLocalStoragePrefix = 'p:';
+
 export default class ProductModel {
 
   constructor() {
@@ -12,13 +14,22 @@ export default class ProductModel {
     this._event = new EventEmitter();
 
     // 保持している情報
-    this._store = {
-      orderBy: {
-        seq: {},
-      },
-      products: {}, // サークルIDをキーにして収納された本の情報
-    };
+    this._store = this._getDefault();
     this._reqWait = {};
+
+    // セッションからの復帰
+    for (let i = 0; i < sessionStorage.length; i++) {
+      try {
+        const key = sessionStorage.key(i);
+        if (KeyLocalStoragePrefix === key.substr(0, KeyLocalStoragePrefix.length)) {
+          let productInfo = JSON.parse(sessionStorage.getItem(key));
+          if (productInfo && productInfo.id) {
+            this._updateCircle(productInfo, true);
+          }
+        }
+      }
+      catch (e) {}
+    }
   }
 
   // 製品を要求
@@ -31,6 +42,11 @@ export default class ProductModel {
 
     if (options.circleId) {
       if (this._reqWait[options.circleId]) {
+        console.debug(`request wait for ${options.circleId}`);
+        return;
+      }
+      if (this._store.products[options.circleId]) {
+        console.debug(`use cache for ${options.circleId}`);
         return;
       }
       this._reqWait[options.circleId] = true;
@@ -61,13 +77,9 @@ export default class ProductModel {
           //console.log('ProductModel request',data);
 
           if (data.list) {
-            for (let i = 0, productInfo; undefined !== (productInfo = data.list[i]); ++i) {
-              // サークル情報更新
-              const circleId = productInfo.circleExhibitInfoID;
-              this._store.products[circleId] = this._store.products[circleId] || {};
-              this._store.products[circleId][productInfo.id] = productInfo;
-              this._store.orderBy.seq[circleId] = this._store.orderBy.seq[circleId] || [];
-              this._store.orderBy.seq[circleId][productInfo.seq-1] = productInfo.id;
+            for (let i = 0, productInfo;
+                undefined !== (productInfo = data.list[i]); ++i) {
+              this._updateCircle(productInfo);
             }
           }
 
@@ -82,6 +94,30 @@ export default class ProductModel {
     };
 
     req();
+  }
+
+  _getDefault() {
+    return {
+      orderBy: {
+        seq: {},
+      },
+      products: {}, // サークルIDをキーにして収納された本の情報
+    };
+  }
+
+  _updateCircle(productInfo, noSave) {
+    // サークル情報更新
+    const circleId = productInfo.circleExhibitInfoID;
+    this._store.products[circleId] = this._store.products[circleId] || {};
+    this._store.products[circleId][productInfo.id] = productInfo;
+    this._store.orderBy.seq[circleId] = this._store.orderBy.seq[circleId] || [];
+    this._store.orderBy.seq[circleId][productInfo.seq-1] = productInfo.id;
+    if (!noSave) {
+      sessionStorage.setItem(
+        KeyLocalStoragePrefix+productInfo.id,
+        JSON.stringify(productInfo)
+      );
+    }
   }
 
   // 通知を登録
@@ -165,5 +201,16 @@ export default class ProductModel {
     Object.keys(reqList).forEach((circleId) => {
       this.request({ circleId });
     });
+  }
+
+  clearCache() {
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (KeyLocalStoragePrefix === key.substr(0, KeyLocalStoragePrefix.length)) {
+        sessionStorage.removeItem(key);
+      }
+    }
+    this._store = this._getDefault();
+    this._event.emit('change');
   }
 }

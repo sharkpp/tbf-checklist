@@ -31,16 +31,7 @@ export default class CircleModel {
     this._waitRequestList = false;
 
     // 保持している情報
-    this._store = {
-      loadCompleted: false,
-      orderBy: {
-        booth: [], // 配置順
-      },
-      lookupBy: {
-        booth: {}, // 配置をキーにサークルIDを引く
-      },
-      circles: {}, // サークルIDをキーにして収納されたサークルの情報
-    };
+    this._store = this._getDefault();
 
     // 古いキャッシュを削除
     sessionStorage.removeItem(KeyLocalStorageOld);
@@ -64,6 +55,19 @@ export default class CircleModel {
       const spaceOrderB = booth2order(b);
       return spaceOrderA - spaceOrderB;
     });
+  }
+
+  _getDefault() {
+    return {
+      loadCompleted: false,
+      orderBy: {
+        booth: [], // 配置順
+      },
+      lookupBy: {
+        booth: {}, // 配置をキーにサークルIDを引く
+      },
+      circles: {}, // サークルIDをキーにして収納されたサークルの情報
+    };
   }
 
   _updateCircle(circleInfo, noSave) {
@@ -290,5 +294,16 @@ export default class CircleModel {
     Object.keys(reqList).forEach((circleId) => {
       this.request({ circleId });
     });
+  }
+
+  clearCache() {
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (KeyLocalStoragePrefix === key.substr(0, KeyLocalStoragePrefix.length)) {
+        sessionStorage.removeItem(key);
+      }
+    }
+    this._store = this._getDefault();
+    this._event.emit('change');
   }
 }
