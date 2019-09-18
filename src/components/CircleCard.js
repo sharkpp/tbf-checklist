@@ -7,6 +7,7 @@ import Badge from 'react-bootstrap/Badge'
 import Form from 'react-bootstrap/Form'
 
 import FavoriteStar from './FavoriteStar'
+import ExternalLink from './ExternalLink'
 
 // サークル表示用
 function CircleCard({ models, circleInfo, isCurrent }) {
@@ -16,7 +17,9 @@ function CircleCard({ models, circleInfo, isCurrent }) {
       <Card >
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
-          {circleInfo.name||' '}
+          <span>{circleInfo.name||' '}</span>
+          <span className='spacer' />
+          <ExternalLink eventId={'tbf07'} circleId={circleInfo && circleInfo.id} />
           <FavoriteStar 
             key={`fav-${circleInfo && circleInfo.id}`}
             models={models} isCurrent={isCurrent}

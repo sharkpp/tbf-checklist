@@ -7,6 +7,7 @@ import Badge from 'react-bootstrap/Badge'
 import Form from 'react-bootstrap/Form'
 
 import FavoriteStar from './FavoriteStar'
+import ExternalLink from './ExternalLink'
 
 const Type2Text = {
   'fanzine':  '同人誌',
@@ -23,7 +24,9 @@ function ProductCard({ models, circleInfo, productInfo, isCurrent }) {
       <Card >
         <Card.Header>
           <Badge variant="secondary">{(circleInfo.spaces||[])[0]}</Badge>
-          {circleInfo.name||' '}
+          <span>{circleInfo.name||' '}</span>
+          <span className='spacer' />
+          <ExternalLink eventId={'tbf07'} circleId={circleInfo && circleInfo.id} />
           <FavoriteStar
             key={`fav-${circleInfo && circleInfo.id}-${productInfo && productInfo.id}`}
             models={models} isCurrent={isCurrent}

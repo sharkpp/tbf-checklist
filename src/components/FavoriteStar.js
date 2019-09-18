@@ -41,19 +41,14 @@ function FavoriteStar({ models, circleId, productId, isCurrent }) {
   }, [isCurrent, favorite, circleId, productId]);
 
   return (
-    <div style={{
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      padding: '.75rem',
-    }}
-    onClick={favorited ? unsetFavorite : setFavorite}
+    <div
+      style={{ paddingLeft: 4 }}
+      onClick={favorited ? unsetFavorite : setFavorite}
     >
       <FontAwesomeIcon
         icon={favorited ? faStarChecked : faStarUnchecked}
         color={"#ffcc00"}
         size="lg"
-        onClick={favorited ? unsetFavorite : setFavorite}
       />
     </div>
   );

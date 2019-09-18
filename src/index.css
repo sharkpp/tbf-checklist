@@ -61,9 +61,15 @@ code {
   height: 100%;
 }
 
-.circle-card  .card-header
+.circle-card  .card-header,
 .product-card .card-header {
   padding: .75rem .75rem;
+  display: flex;
+}
+
+.circle-card  .spacer,
+.product-card .spacer {
+  flex-grow: 1;
 }
 
 .circle-card  .card-header > .badge,
@@ -123,10 +129,10 @@ code {
   position: absolute;
   left: 0;
   top: 0;
-  width: calc(100% - 75px * 2);
+  width: calc(100% - 100px * 2);
   min-height: 75px;
   height: 10%;
-  margin-left: 75px;
+  margin-left: 100px;
 }
 .product-next {
   position: absolute;
