@@ -17,6 +17,14 @@ code {
     monospace;
 }
 
+.dropzone {
+  margin-bottom: .5em;
+}
+
+.btn-toolbar > button {
+  margin-left: .5em;
+}
+
 .page-container {
   padding: 24px;
 }

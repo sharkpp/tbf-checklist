@@ -1,29 +1,73 @@
 "use struct";
 
-import React, {useCallback} from 'react'
+import React, {useState, useCallback} from 'react'
 
-import { Button } from 'react-router-bootstrap'
+import { ButtonToolbar, Button } from 'react-bootstrap';
 
 import {useDropzone} from 'react-dropzone'
 import 'react-dropzone/examples/theme.css';
 
-function FavoriteImportView() {
+import MessageBox from '../components/MessageBox';
 
-  const {acceptedFiles, rejectedFiles, getRootProps, getInputProps} = useDropzone({
-    accept: 'image/jpeg, image/png'
+const MsgImportSuccess = 'お気に入りのインポートに成功しました';
+const MsgImportFailed  = 'お気に入りのインポートに失敗しました';
+
+function FavoriteImportView({ models, history }) {
+  const { favorite } = models;
+
+  const [ message, setMessage ] = useState(false);
+
+  const {
+    acceptedFiles,
+    rejectedFiles,
+    getRootProps,
+    getInputProps
+  } = useDropzone({
+    accept: 'application/json'
   });
-  
-  const acceptedFilesItems = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
 
   const rejectedFilesItems = rejectedFiles.map(file => (
     <li key={file.path}>
-      {file.path} - {file.size} bytes
+      {file.path} は利用できません。
     </li>
   ));
+
+  const handleImportClick = useCallback(() => {
+    if (acceptedFiles.length < 1) {
+      return;
+    }
+
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+    
+    // ファイル情報をキャプチャ
+    reader.onload = (e) => {
+      if (!favorite.import(e.target.result)) {
+        setMessage(MsgImportFailed);
+      }
+      else {
+        setMessage(MsgImportSuccess);
+      }
+    };
+
+    // Read in the image file as a data URL.
+    reader.readAsText(file);
+
+  }, [acceptedFiles, favorite]);
+
+  const handleBackClick = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
+  const handleMessageClose = useCallback(() => {
+    setMessage(false);
+  }, [history]);
+
+  // インポートに成功したので戻る
+  const handleMessageCloseWithBack = useCallback(() => {
+    setMessage(false);
+    history.goBack();
+  }, [history]);
 
   return (
       <div className='page-container'>
@@ -35,12 +79,18 @@ function FavoriteImportView() {
           <p>ここでエクスポートしたお気に入りをドラッグ＆ドロップするか、クリックして選択してください</p>
           <em>(*.json のみ指定可能)</em>
         </div>
-        {0&&<div
-        //type is invalid -- expected a string がでる
-        >
-        <Button variant="primary" onClick={}>インポート</Button>
-        <Button variant="secondary" onClick={}>戻る</Button>
-        </div>}
+        <ol>
+          {rejectedFilesItems}
+        </ol>
+        <ButtonToolbar>
+          <Button variant="primary"   onClick={handleImportClick} disabled={acceptedFiles.length<1}>インポート</Button>
+          <Button variant="secondary" onClick={handleBackClick}>戻る</Button>
+        </ButtonToolbar>
+        <MessageBox
+          title="インポート"
+          message={message}
+          onClose={message === MsgImportSuccess ? handleMessageCloseWithBack : handleMessageClose}
+        />
       </div>
   );
 }
