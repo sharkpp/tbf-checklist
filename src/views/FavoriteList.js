@@ -54,21 +54,21 @@ function FavoriteListView({ history, models }) {
       <h3>
         お気に入り一覧
       </h3>
-      <Table striped bordered size="sm">
+      <Table className='fav-list' striped bordered size="sm">
         <thead>
           <tr>
-            <th>配置</th>
-            <th>サークル名</th>
-            <th>頒布物</th>
-            <th>価格</th>
+            <th className='circle-space'>配置</th>
+            <th className='circle-name'>サークル名</th>
+            <th className='product-name'>頒布物</th>
+            <th className='product-price'>価格</th>
           </tr>
         </thead>
         <tbody>
           {favList.map((favItem, index) => {
             return (
               <tr key={`fav-${favItem.circleId}-${favItem.productId|'circle'}`}>
-                <td style={{ wordBreak: 'keep-all' }}>
-                  <Button variant="link" onClick={() => {
+                <td className='circle-space' >
+                  <Button variant="link" style={{ padding: 0 }} onClick={() => {
                     if (favItem.productId) {
                       history.push(`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}/${favItem.productId}`);
                     }
@@ -79,17 +79,17 @@ function FavoriteListView({ history, models }) {
                     {favItem.space||''}
                   </Button>
                 </td>
-                <td>{favItem.circleName||''}</td>
-                <td>{favItem.productName||''}</td>
-                <td style={{ wordBreak: 'keep-all', textAlign: 'right' }}>{undefined===favItem.productPrice?'':`${favItem.productPrice} 円`}</td>
+                <td className='circle-name'>{favItem.circleName||''}</td>
+                <td className='product-name'>{favItem.productName||''}</td>
+                <td className='product-price' >{undefined===favItem.productPrice?'':`${favItem.productPrice} 円`}</td>
               </tr>
             );
           })}
         </tbody>
         <tfoot>
           <tr>
-            <th>合計</th>
-            <td colSpan={3} style={{ textAlign: 'right' }}>{`${priceTotal.price} 円${priceTotal.withUnknown?' ※不明含む':''}`}</td>
+            <th className='circle-space' >合計</th>
+            <td colSpan={3} className='product-price' >{`${priceTotal.price} 円${priceTotal.withUnknown?' ※不明含む':''}`}</td>
           </tr>
         </tfoot>
       </Table>

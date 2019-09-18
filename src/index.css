@@ -159,3 +159,21 @@ code {
   left: 8px;
   top:  8px;
 }
+
+.fav-list .circle-space, .fav-list .circle-space > button {
+  word-break: keep-all;
+  white-space: nowrap;
+  font-size: 90%;
+}
+.fav-list .circle-name {
+  font-size: 90%;
+}
+.fav-list .product-name {
+  font-size: 90%;
+}
+.fav-list .product-price {
+  word-break: keep-all;
+  white-space: nowrap;
+  text-align: right;
+  font-size: 90%;
+}
