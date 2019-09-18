@@ -253,4 +253,23 @@ export default class CircleModel {
     const circleInfo = this._store.circles[circleId];
     return circleInfo && circleInfo.nextCircleExhibitInfoID;
   }
+
+  mergeFavorite(favList) {
+    let reqList = {};
+    favList.forEach(favItem => {
+      if (favItem.circleId) {
+        const circleInfo = this._store.circles[favItem.circleId];
+        if (!circleInfo) {
+          reqList[favItem.circleId] = true;
+          return;
+        }
+        favItem.space       = circleInfo.spaces[0];
+        favItem.circleName  = circleInfo.name;
+      }
+    });
+    // 足りないものを要求
+    Object.keys(reqList).forEach((circleId) => {
+      this.request({ circleId });
+    });
+  }
 }

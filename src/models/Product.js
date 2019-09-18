@@ -18,6 +18,7 @@ export default class ProductModel {
       },
       products: {}, // サークルIDをキーにして収納された本の情報
     };
+    this._reqWait = {};
   }
 
   // 製品を要求
@@ -26,9 +27,13 @@ export default class ProductModel {
     options.circleId = options.circleId || null;
 
     let reqUrls = [];
-    let reqProductList = false;
+    let reqCircleId = options.circleId;
 
     if (options.circleId) {
+      if (this._reqWait[options.circleId]) {
+        return;
+      }
+      this._reqWait[options.circleId] = true;
       reqUrls.push(`${Endpoint}/product?circleExhibitInfoID=${options.circleId}&limit=100`);
     }
     else {
@@ -39,9 +44,7 @@ export default class ProductModel {
     const req = () => {
       const reqUrl = reqUrls.shift();
       if (!reqUrl) { // 取得完了
-        if (reqProductList) { //console.log('ProductModel request comp!');
-          this._waitProductList = false;
-        }
+        delete this._reqWait[reqCircleId];
         this._event.emit('change');
         this._event.emit('loaded');
       }
@@ -145,4 +148,22 @@ export default class ProductModel {
     return (orderBySeq && products[orderBySeq[indexBySeq + 1]]) || false;
   }
 
+  mergeFavorite(favList) {
+    let reqList = {};
+    favList.forEach(favItem => {
+      if (favItem.circleId && favItem.productId) {
+        const productInfo = (this._store.products[favItem.circleId]||{})[favItem.productId];
+        if (!productInfo) {
+          reqList[favItem.circleId] = true;
+          return;
+        }
+        favItem.productName  = productInfo.name;
+        favItem.productPrice = productInfo.price;
+      }
+    });
+    // 足りないものを要求
+    Object.keys(reqList).forEach((circleId) => {
+      this.request({ circleId });
+    });
+  }
 }

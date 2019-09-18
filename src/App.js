@@ -1,28 +1,16 @@
 "use struct";
 
 import React from 'react';
-import { HashRouter as Router, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Route } from "react-router-dom";
 import './App.css';
 import EventSelectView  from './views/EventSelect';
 import CircleSelectView from './views/CircleSelect';
+import FavoriteImportView from './views/FavoriteImport';
+import FavoriteListView from './views/FavoriteList';
 
 function App({ models }) {
   return (
     <Router>
-      {false&&<nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about/">About</Link>
-          </li>
-          <li>
-            <Link to="/users/">Users</Link>
-          </li>
-        </ul>
-      </nav>}
-
       <Route
         path="/" exact
         render={(router) => 
@@ -39,6 +27,22 @@ function App({ models }) {
             models={models}
             history={router.history}
             params={router.match.params}
+          />}
+      />
+      <Route
+        path="/fav/import"
+        render={(router) => 
+          <FavoriteImportView
+            models={models}
+            history={router.history}
+          />}
+      />
+      <Route
+        path="/fav/list"
+        render={(router) => 
+          <FavoriteListView
+            models={models}
+            history={router.history}
           />}
       />
     </Router>

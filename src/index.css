@@ -17,6 +17,18 @@ code {
     monospace;
 }
 
+.dropzone {
+  margin-bottom: .5em;
+}
+
+.btn-toolbar > button {
+  margin-left: .5em;
+}
+
+.page-container {
+  padding: 24px;
+}
+
 .loading {
   position: relative;
   width: 100%;
@@ -124,4 +136,10 @@ code {
   min-height: 75px;
   height: 10%;
   margin-left: 75px;
+}
+
+.card-menu-btn {
+  position: absolute;
+  left: 4px;
+  top: 4px;
 }
