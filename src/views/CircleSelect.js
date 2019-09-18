@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 
-import { Button, Spinner } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,6 +10,7 @@ import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/
 
 import CircleCard from '../components/CircleCard'
 import ProductCard from '../components/ProductCard'
+import EmptyCard from '../components/EmptyCard'
 import HamburgerMenuButton from '../components/HamburgerMenuButton'
 
 function CircleSelectView({ models, history, params }) {
@@ -108,9 +109,7 @@ function CircleSelectView({ models, history, params }) {
   return (
     <div className="card-container">
       {[
-        <div className="loading">
-          <Spinner animation="border" />
-        </div>,
+        <EmptyCard />,
         <CircleCard
           key={`_${circleId}`}
           isCurrent={true}

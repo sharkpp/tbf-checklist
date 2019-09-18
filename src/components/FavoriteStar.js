@@ -3,9 +3,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar as faStarChecked } from '@fortawesome/free-solid-svg-icons'
-import { faStar as faStarUnchecked } from '@fortawesome/free-regular-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar as faStarChecked } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faStarUnchecked } from '@fortawesome/free-regular-svg-icons';
 
 // 製品表示用
 function FavoriteStar({ models, circleId, productId, isCurrent }) {
@@ -42,7 +42,7 @@ function FavoriteStar({ models, circleId, productId, isCurrent }) {
 
   return (
     <div
-      style={{ paddingLeft: 8 }}
+      style={{ marginLeft: 8 }}
       onClick={favorited ? unsetFavorite : setFavorite}
     >
       <FontAwesomeIcon

@@ -3,8 +3,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 // 製品表示用
 function ExternalLink({ eventId, circleId }) {
@@ -15,7 +15,7 @@ function ExternalLink({ eventId, circleId }) {
 
   return (
     <div
-      style={{ paddingLeft: 8 }}
+      style={{ marginLeft: 8 }}
       onClick={handleOpenLink}
     >
       <FontAwesomeIcon
