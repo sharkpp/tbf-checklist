@@ -15,7 +15,7 @@ function ExternalLink({ eventId, circleId }) {
 
   return (
     <div
-      style={{ paddingLeft: 4 }}
+      style={{ paddingLeft: 8 }}
       onClick={handleOpenLink}
     >
       <FontAwesomeIcon

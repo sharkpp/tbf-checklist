@@ -107,45 +107,55 @@ code {
   display: none;
 }
 
-.circle-prev {
+.circle-prev, .circle-next,
+.product-prev, .product-next {
   position: absolute;
-  left: 0;
-  top: 0;
+}
+.circle-prev, .circle-next {
   height: calc(100% - 75px * 2);
   min-width: 75px;
   width: 10%;
   margin-top: 75px;
+}
+.circle-prev {
+  left: 0;
+  top: 0;
 }
 .circle-next {
-  position: absolute;
   right: 0;
   top: 0;
-  height: calc(100% - 75px * 2);
-  min-width: 75px;
-  width: 10%;
-  margin-top: 75px;
 }
-.product-prev {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: calc(100% - 100px * 2);
-  min-height: 75px;
-  height: 10%;
-  margin-left: 100px;
+.circle-prev > svg {
+  margin-left: -32px;
 }
-.product-next {
-  position: absolute;
-  left: 0;
-  bottom: 0;
+.circle-next > svg {
+  margin-right: -32px;
+}
+.product-prev, .product-next {
   width: calc(100% - 75px * 2);
   min-height: 75px;
   height: 10%;
   margin-left: 75px;
 }
+.product-prev {
+  left: 0;
+  top: 0;
+  width: calc(100% - 100px * 2);
+  margin-left: 100px;
+}
+.product-next {
+  left: 0;
+  bottom: 0;
+}
+.product-prev > svg {
+  margin-top: -48px;
+}
+.product-next > svg {
+  margin-bottom: -24px;
+}
 
 .card-menu-btn {
   position: absolute;
-  left: 4px;
-  top: 4px;
+  left: 8px;
+  top:  8px;
 }

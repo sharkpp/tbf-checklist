@@ -42,7 +42,7 @@ function FavoriteStar({ models, circleId, productId, isCurrent }) {
 
   return (
     <div
-      style={{ paddingLeft: 4 }}
+      style={{ paddingLeft: 8 }}
       onClick={favorited ? unsetFavorite : setFavorite}
     >
       <FontAwesomeIcon
