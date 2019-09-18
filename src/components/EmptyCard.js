@@ -10,7 +10,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 // サークル表示用
-function EmptyCard({}) {
+function EmptyCard() {
   return (
     <div className='circle-card'>
       <Card >

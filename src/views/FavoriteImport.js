@@ -59,9 +59,9 @@ function FavoriteImportView({ models, history }) {
     history.goBack();
   }, [history]);
 
-  const handleMessageClose = useCallback(() => {
+  const handleMessageClose = () => {
     setMessage(false);
-  }, [history]);
+  };
 
   // インポートに成功したので戻る
   const handleMessageCloseWithBack = useCallback(() => {

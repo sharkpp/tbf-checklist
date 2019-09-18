@@ -1,7 +1,7 @@
 
 "use struct";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,7 @@ function ExternalLink({ eventId, circleId }) {
 
   const handleOpenLink = useCallback(() => {
     window.open(`https://techbookfest.org/event/${eventId}/circle/${circleId}`);
-  }, [circleId]);
+  }, [eventId, circleId]);
 
   return (
     <div

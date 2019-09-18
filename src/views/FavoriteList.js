@@ -43,7 +43,7 @@ function FavoriteListView({ history, models }) {
       product.off('loaded',updateFavList);
       favorite.off('change',updateFavList);
     };
-  }, [favorite]);
+  }, [circle,product,favorite]);
 
   const handleBackClick = useCallback(() => {
     history.goBack();
