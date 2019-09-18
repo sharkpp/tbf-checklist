@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
 import { Button, Spinner } from 'react-bootstrap';
-import { FormControl, Dropdown } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
@@ -24,7 +24,7 @@ function CircleSelectView({ models, history, params }) {
 
   const handleFavoriteList = useCallback(() => {
     history.push(`/fav/list`);
-  });
+  }, [history]);
 
   const handleFavoriteSave = useCallback(() => {
     favorite.export();
