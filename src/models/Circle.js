@@ -6,7 +6,8 @@ const Endpoint = 'https://api-gw98.herokuapp.com/https://techbookfest.org/api';
 
 const BoothToken = /^(.+?)([0-9]+)(.*)$/; // 配置を、種別、番号、フロア に分割するための正規表現
 
-const KeyLocalStorage = 'circle-cache';
+const KeyLocalStorageOld = 'circle-cache';
+const KeyLocalStoragePrefix = 'c:';
 
 // 配置を順番に
 function booth2order(booth) {
@@ -26,8 +27,11 @@ export default class CircleModel {
     // イベント通知
     this._event = new EventEmitter();
 
+    this._waitRequest = {};
+    this._waitRequestList = false;
+
     // 保持している情報
-    this._store = Object.assign({
+    this._store = {
       loadCompleted: false,
       orderBy: {
         booth: [], // 配置順
@@ -36,16 +40,50 @@ export default class CircleModel {
         booth: {}, // 配置をキーにサークルIDを引く
       },
       circles: {}, // サークルIDをキーにして収納されたサークルの情報
-    }, JSON.parse(sessionStorage.getItem(KeyLocalStorage)) || {});
+    };
 
-    this._waitRequest = {};
-    this._waitRequestList = false;
+    // 古いキャッシュを削除
+    sessionStorage.removeItem(KeyLocalStorageOld);
+
+    // セッションからの復帰
+    for (let i = 0; i < sessionStorage.length; i++) {
+      try {
+        const key = sessionStorage.key(i);
+        if (KeyLocalStoragePrefix === key.substr(0, KeyLocalStoragePrefix.length)) {
+          let circleInfo = JSON.parse(sessionStorage.getItem(key));
+          if (circleInfo && circleInfo.id) {
+            this._updateCircle(circleInfo, true);
+          }
+        }
+      }
+      catch (e) {}
+    }
+    this._store.orderBy.booth = this._store.orderBy.booth.sort((a, b) => {
+      // 運＜協＜あ〜
+      const spaceOrderA = booth2order(a);
+      const spaceOrderB = booth2order(b);
+      return spaceOrderA - spaceOrderB;
+    });
   }
 
-  _updateCache() {
-    const data = JSON.stringify(this._store);
-    console.debug('circle data len', data.length);
-    sessionStorage.setItem(KeyLocalStorage, data);
+  _updateCircle(circleInfo, noSave) {
+    // サークル情報更新
+    delete circleInfo.event;
+    delete circleInfo.eventExhibitCourse;
+    this._store.circles[circleInfo.id] = circleInfo;
+    // 配置からサークルIdを引くための情報を更新
+    for (let j = 0, space; undefined !== (space = circleInfo.spaces[j]); ++j) {
+      this._store.lookupBy.booth[space] = circleInfo.id;
+      if (this._store.orderBy.booth.indexOf(space) < 0) {
+        this._store.orderBy.booth.push(space);
+      }
+    }
+    if (!noSave) {
+      sessionStorage.setItem(
+        KeyLocalStoragePrefix+circleInfo.id,
+        JSON.stringify(circleInfo)
+      );
+    }
   }
 
   // サークルを要求
@@ -62,6 +100,10 @@ export default class CircleModel {
         console.debug(`request wait for ${options.circleId}`);
         return;
       }
+      if (this._store.circles[options.circleId]) {
+        console.debug(`use cache for ${options.circleId}`);
+        return;
+      }
       reqUrls.push(`${Endpoint}/circle/${options.circleId}`);
       this._waitRequest[options.circleId] = true;
       reqInfo = options.circleId;
@@ -76,7 +118,6 @@ export default class CircleModel {
       }
       this._waitRequestList = reqInfo = true;
       this._store.loadCompleted = false;
-      this._updateCache();
       reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&eventExhibitCourseID=3&visibility=site&limit=100&onlyAdoption=true`);
       //reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&visibility=site&limit=100&onlyAdoption=true`);
     }
@@ -92,7 +133,6 @@ export default class CircleModel {
         else {
           delete this._waitRequest[reqInfo];
         }
-        this._updateCache();
         this._event.emit('change');
         this._event.emit('loaded');
       }
@@ -109,32 +149,12 @@ export default class CircleModel {
           //console.log('CircleModel request',data);
 
           if (!data.list) {
-            const circleInfo = data;
-            // サークル情報更新
-            delete circleInfo.event;
-            delete circleInfo.eventExhibitCourse;
-            this._store.circles[circleInfo.id] = circleInfo;
-            // 配置からサークルIdを引くための情報を更新
-            for (let j = 0, space; undefined !== (space = circleInfo.spaces[j]); ++j) {
-              this._store.lookupBy.booth[space] = circleInfo.id;
-              if (this._store.orderBy.booth.indexOf(space) < 0) {
-                this._store.orderBy.booth.push(space);
-              }
-            }
+            this._updateCircle(data);
           }
           else {
-            for (let i = 0, circleInfo; undefined !== (circleInfo = data.list[i]); ++i) {
-              delete circleInfo.event;
-              delete circleInfo.eventExhibitCourse;
-              // サークル情報更新
-              this._store.circles[circleInfo.id] = circleInfo;
-              // 配置からサークルIdを引くための情報を更新
-              for (let j = 0, space; undefined !== (space = circleInfo.spaces[j]); ++j) {
-                this._store.lookupBy.booth[space] = circleInfo.id;
-                if (this._store.orderBy.booth.indexOf(space) < 0) {
-                  this._store.orderBy.booth.push(space);
-                }
-              }
+            for (let i = 0, circleInfo;
+                undefined !== (circleInfo = data.list[i]); ++i) {
+              this._updateCircle(circleInfo);
             }
           }
 
@@ -145,7 +165,6 @@ export default class CircleModel {
             return spaceOrderA - spaceOrderB;
           });
           
-          this._updateCache();
           this._event.emit('change');
 
           // 次を要求
