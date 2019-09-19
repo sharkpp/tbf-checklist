@@ -1,8 +1,6 @@
 # サークルリスト for Techbook Fest
 
-[![Actions Status](https://github.com/sharkpp/tbf-checklist/workflows/gh-pages/badge.svg)](https://github.com/sharkpp/tbf-checklist/actions)  
-
-[チェックリスト](https://sharkpp.github.io/tbf-checklist/)  
+![Netlify Status](https://api.netlify.com/api/v1/badges/54e3b920-6dc4-4235-9991-1807d4d45edc/deploy-status)
 
 ## 利用可能なスクリプト
 
