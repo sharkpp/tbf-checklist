@@ -8,8 +8,6 @@ import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
-import CircleCard from '../components/CircleCard'
-import ProductCard from '../components/ProductCard'
 import EmptyCard from '../components/EmptyCard'
 import HamburgerMenuButton from '../components/HamburgerMenuButton'
 
@@ -113,24 +111,7 @@ function CircleSelectView({ models, history, params }) {
 
   return (
     <div className="card-container">
-      {[
-        <EmptyCard />,
-        <CircleCard
-          key={`_${circleId}`}
-          isCurrent={true}
-          models={models}
-          circleInfo={circleInfo_}
-        />,
-        <ProductCard
-          key={`_${circleId}_${productId}`}
-          isCurrent={true}
-          models={models}
-          circleInfo={circleInfo_}
-          productInfo={productInfo_}
-        />
-      ][
-        !circleInfo ? 0 : (!productInfo || !productInfo.name ? 1 : 2)
-      ]}
+      <EmptyCard />
 
       <Dropdown className='card-menu-btn'>
         <Dropdown.Toggle as={HamburgerMenuButton} id="dropdown-custom-components">
@@ -141,64 +122,12 @@ function CircleSelectView({ models, history, params }) {
           <Dropdown.Item eventKey="1" onSelect={handleFavoriteList}>お気に入り一覧</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item eventKey="2" onSelect={handleFavoriteSave}>お気に入りをエクスポート</Dropdown.Item>
-          <Dropdown.Item eventKey="3" onSelect={handleFavoriteLoad}>お気に入りをインポート</Dropdown.Item>
+          <Dropdown.Item eventKey="3" onSelect={handleFavoriteLoad} disabled>お気に入りをインポート</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item eventKey="3" onSelect={handleClearCache}>キャッシュをクリア</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
-      <Button
-        variant="link"
-        className={"circle-prev"+(circleInfo&&circle.hasPrevCircle(circleId)?'':' btn-hidden')}
-        onClick={() => {//console.log('ButtonBack');
-          const prevCircleId = circle.getPrevCircleId(circleId);
-          prevCircleId && history.push(`/${event}/circle/${prevCircleId}`);
-        }}
-      >
-        <FontAwesomeIcon icon={faAngleLeft} color={"gray"} size="3x" />
-      </Button>
-
-      <Button
-        variant="link"
-        className={"circle-next"+(circleInfo&&circle.hasNextCircle(circleId)?'':' btn-hidden')}
-        onClick={() => {//console.log('ButtonNext');
-          const nextCircleId = circle.getNextCircleId(circleId);
-          nextCircleId && history.push(`/${event}/circle/${nextCircleId}`);
-        }}
-      >
-        <FontAwesomeIcon icon={faAngleRight} color={"gray"} size="3x" />
-      </Button>
-
-
-      <Button
-        variant="link"
-        className={"product-prev"+(productId?'':' btn-hidden')}
-        onClick={() => {//console.log('ButtonTop');
-          const prevProduct = product.getPrevSiblings(circleId, productId);
-          history.push(
-            prevProduct
-              ? `/${event}/circle/${circleId}/${prevProduct.id}`
-              : `/${event}/circle/${circleId}`
-            );
-        }}
-      >
-        <FontAwesomeIcon icon={faAngleUp} color={"gray"} size="3x" />
-      </Button>
-
-      <Button
-        variant="link"
-        className={"product-next"+(product.hasNextProduct(circleId,productId)?'':' btn-hidden')}
-        onClick={() => {//console.log('ButtonButton');
-          const nextProduct = product.getNextSiblings(circleId, productId);
-          history.push(
-            nextProduct
-              ? `/${event}/circle/${circleId}/${nextProduct.id}`
-              : `/${event}/circle/${circleId}`
-            );
-        }}
-      >
-        <FontAwesomeIcon icon={faAngleDown} color={"gray"} size="3x" />
-      </Button>
 
     </div>
   );

@@ -2,8 +2,6 @@
 
 const EventEmitter = require('events');
 
-const Endpoint = 'https://api-gw98.herokuapp.com/https://techbookfest.org/api';
-
 const BoothToken = /^(.+?)([0-9]+)(.*)$/; // 配置を、種別、番号、フロア に分割するための正規表現
 
 const KeyLocalStorageOld = 'circle-cache';
@@ -92,94 +90,6 @@ export default class CircleModel {
 
   // サークルを要求
   request(options) {
-    options = options || {};
-    options.circleId = options.circleId || null;
-
-    const eventId = 'tbf07';
-    let reqUrls = [];
-    let reqInfo = false;
-
-    if (options.circleId) { // 特定のサークルのみ取得
-      if (this._waitRequest[options.circleId]) { // 要求中なので何もしない
-        console.debug(`request wait for ${options.circleId}`);
-        return;
-      }
-      if (this._store.circles[options.circleId]) {
-        console.debug(`use cache for ${options.circleId}`);
-        return;
-      }
-      reqUrls.push(`${Endpoint}/circle/${options.circleId}`);
-      this._waitRequest[options.circleId] = true;
-      reqInfo = options.circleId;
-    }
-    else { // 全てのサークルを取得
-      if (0&&this._store.loadCompleted && !options.force) {
-        this._waitRequestList = false;
-        console.debug('circle list uses cache');
-        this._event.emit('change');
-        this._event.emit('loaded');
-        return;
-      }
-      this._waitRequestList = reqInfo = true;
-      this._store.loadCompleted = false;
-      reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&eventExhibitCourseID=3&visibility=site&limit=100&onlyAdoption=true`);
-      //reqUrls.push(`${Endpoint}/circle?eventID=${eventId}&visibility=site&limit=100&onlyAdoption=true`);
-    }
-
-    // 情報を要求
-    const req = () => {
-      const reqUrl = reqUrls.shift();
-      if (!reqUrl) { // 取得完了
-        if (true === reqInfo) { //console.log('CircleModel request comp!');
-          this._waitRequestList = false;
-          this._store.loadCompleted = true;
-        }
-        else {
-          delete this._waitRequest[reqInfo];
-        }
-        this._event.emit('change');
-        this._event.emit('loaded');
-      }
-      else { // 取得継続中
-        fetch(reqUrl, {
-          method: 'GET'
-        }).then((res) => {
-          return res.json();
-        }).then((data) => {
-          if (data.cursor) { // 継続カーソルが存在するので次を追加
-            reqUrls.unshift(`${reqUrl.replace(/&cursor=.+$/,'')}&cursor=${data.cursor}`);
-          }
-
-          //console.log('CircleModel request',data);
-
-          if (!data.list) {
-            this._updateCircle(data);
-          }
-          else {
-            for (let i = 0, circleInfo;
-                undefined !== (circleInfo = data.list[i]); ++i) {
-              this._updateCircle(circleInfo);
-            }
-          }
-
-          this._store.orderBy.booth = this._store.orderBy.booth.sort((a, b) => {
-            // 運＜協＜あ〜
-            const spaceOrderA = booth2order(a);
-            const spaceOrderB = booth2order(b);
-            return spaceOrderA - spaceOrderB;
-          });
-          
-          this._event.emit('change');
-
-          // 次を要求
-          return req();
-        }).catch((err) => {
-          return console.error(err);
-        });
-      }
-    };
-
-    req();
   }
 
   // 通知を登録
@@ -283,7 +193,8 @@ export default class CircleModel {
       if (favItem.circleId) {
         const circleInfo = this._store.circles[favItem.circleId];
         if (!circleInfo) {
-          reqList[favItem.circleId] = true;
+          favItem.circleName  = favItem.circleId;
+            reqList[favItem.circleId] = true;
           return;
         }
         favItem.space       = circleInfo.spaces[0];

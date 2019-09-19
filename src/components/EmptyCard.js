@@ -15,23 +15,13 @@ function EmptyCard() {
     <div className='circle-card'>
       <Card >
         <Card.Header>
-          <span>&nbsp;</span>
-          <span className='spacer' />
-          <FontAwesomeIcon
-            icon={faExternalLinkAlt}
-            color={"gray"}
-            size="lg"
-            style={{ marginLeft: 8 }}
-          />
-          <FontAwesomeIcon
-            icon={faStarUnchecked}
-            color={"gray"}
-            size="lg"
-            style={{ marginLeft: 8 }}
-          />
+          閉鎖されました
         </Card.Header>
         <div className="loading">
-          <Spinner animation="border" />
+          <p>諸事情によりこのサイトは閉鎖されました。</p>
+          <p>メニューより、お気に入り一覧の表示、エクスポートのみ可能です。</p>
+          <p>サークル名などはキャッシュに残っている場合にのみ表示されます。</p>
+          <p>ご迷惑をおかけいたしますが、ご理解の程よろしくお願い申し上げます。</p>
         </div>
       </Card>
     </div>
