@@ -11,7 +11,7 @@ const KeyLocalStoragePrefix = 'c:';
 
 // 配置を順番に
 function booth2order(booth) {
-  const spaceToken = [].concat(BoothToken.exec(booth)||['',0,'']).slice(1);
+  const spaceToken = [].concat(BoothToken.exec(booth)||['','0','']).slice(1);
   const spaceCategory = spaceToken[0].codePointAt(0);
   return (
     0x3041 <= spaceCategory && spaceCategory <= 0x3093
@@ -168,7 +168,7 @@ export default class CircleModel {
             const spaceOrderB = booth2order(b);
             return spaceOrderA - spaceOrderB;
           });
-          
+
           this._event.emit('change');
 
           // 次を要求
@@ -277,6 +277,7 @@ export default class CircleModel {
     return circleInfo && circleInfo.nextCircleExhibitInfoID;
   }
 
+  // お気に入りの情報にサークル情報をマージする
   mergeFavorite(favList) {
     let reqList = {};
     favList.forEach(favItem => {
@@ -290,12 +291,18 @@ export default class CircleModel {
         favItem.circleName  = circleInfo.name;
       }
     });
+    favList = favList.sort((a, b) => {
+      const spaceOrderA = booth2order(a.space);
+      const spaceOrderB = booth2order(b.space);
+      return spaceOrderA - spaceOrderB;
+    });
     // 足りないものを要求
     Object.keys(reqList).forEach((circleId) => {
       this.request({ circleId });
     });
   }
 
+  // キャッシュを削除
   clearCache() {
     for (let i = 0; i < sessionStorage.length; i++) {
       const key = sessionStorage.key(i);

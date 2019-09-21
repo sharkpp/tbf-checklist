@@ -184,6 +184,7 @@ export default class ProductModel {
     return (orderBySeq && products[orderBySeq[indexBySeq + 1]]) || false;
   }
 
+  // お気に入りの情報に頒布物情報をマージする
   mergeFavorite(favList) {
     let reqList = {};
     favList.forEach(favItem => {
@@ -195,7 +196,19 @@ export default class ProductModel {
         }
         favItem.productName  = productInfo.name;
         favItem.productPrice = productInfo.price;
+        favItem.seq = productInfo.seq;
       }
+    });
+    favList = favList.sort((a, b) => {
+      if (a.circleId !== b.circleId) {
+        return 0;
+      }
+      const seqA = a.seq||0;
+      const seqB = b.seq||0;
+      return seqA - seqB;
+    }).map((favItem) => {
+      delete favItem.seq;
+      return favItem;
     });
     // 足りないものを要求
     Object.keys(reqList).forEach((circleId) => {
@@ -203,6 +216,7 @@ export default class ProductModel {
     });
   }
 
+  // キャッシュを削除
   clearCache() {
     for (let i = 0; i < sessionStorage.length; i++) {
       const key = sessionStorage.key(i);
