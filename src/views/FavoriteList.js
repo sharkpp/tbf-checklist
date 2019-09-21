@@ -18,6 +18,7 @@ function FavoriteListView({ history, models }) {
       circle.mergeFavorite(favList);
       product.mergeFavorite(favList);
       setFavList(favList);
+      // 価格の合計を計算
       setPriceTotal(favList.reduce((r, favItem) => {
         if (favItem.productId) {
           if (undefined === favItem.productPrice) {
@@ -58,30 +59,50 @@ function FavoriteListView({ history, models }) {
         <thead>
           <tr>
             <th className='circle-space'>配置</th>
-            <th className='circle-name'>サークル名</th>
-            <th className='product-name'>頒布物</th>
+            <th className='circle-name' colSpan={2}>サークル名/頒布物</th>
             <th className='product-price'>価格</th>
+            <th className='product-tags'>タグ</th>
           </tr>
         </thead>
         <tbody>
           {favList.map((favItem, index) => {
-            return (
-              <tr key={`fav-${favItem.circleId}-${favItem.productId||'circle'}`}>
-                <td className='circle-space' >
-                  <Button variant="link" style={{ padding: 0 }} onClick={() => {
-                    if (favItem.productId) {
-                      history.push(`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}/${favItem.productId}`);
-                    }
-                    else {
-                      history.push(`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}`);
-                    }
-                  }} >
+            return (!favItem.productId
+              ? <tr key={`fav-${favItem.circleId}-circle`}>
+                  <td className='circle-space' >
                     {favItem.space||''}
-                  </Button>
+                  </td>
+                  <td className='circle-name' colSpan={2}>
+                    <Button variant="link" style={{ padding: 0 }} onClick={() => {
+                      history.push(`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}`);
+                    }} >
+                      {favItem.circleName||''}
+                    </Button>
+                  </td>
+                  <td className='product-price' >
+                  </td>
+                  <td className='product-tags' >
+                  </td>
+                </tr>
+              : <tr key={`fav-${favItem.circleId}-${favItem.productId}`}>
+                  <td className='product-circle-space' >
+                    {favItem.space||''}
+                  </td>
+                  <td className='product-circle-name'>
+                    {favItem.circleName||''}
+                  </td>
+                  <td className='product-name'>
+                    <Button variant="link" style={{ padding: 0 }} onClick={() => {
+                      history.push(`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}/${favItem.productId}`);
+                    }} >
+                      {favItem.productName||''}
+                    </Button>
+                  </td>
+                  <td className='product-price' >
+                    {undefined===favItem.productPrice?'':`${favItem.productPrice} 円`}
+                  </td>
+                <td className='product-tags' >
+
                 </td>
-                <td className='circle-name'>{favItem.circleName||''}</td>
-                <td className='product-name'>{favItem.productName||''}</td>
-                <td className='product-price' >{undefined===favItem.productPrice?'':`${favItem.productPrice} 円`}</td>
               </tr>
             );
           })}

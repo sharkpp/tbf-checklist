@@ -99,6 +99,7 @@ export default class FavoriteModel {
             favList.push({ eventId: eventId, circleId: circleId });
           }
           else {
+            favList.push({ eventId: eventId, circleId: circleId });
             favList.push({ eventId: eventId, circleId: circleId, productId: productId });
             hasProduct[circleId] = true;
           }
@@ -106,9 +107,15 @@ export default class FavoriteModel {
       }
     }
     // 頒布物をチェックしている場合はサークルのお気に入りをリストから除く
+    let foundCircle = {};
     favList = favList.reduce((r, favItem) => {
-      if (favItem.productId ||
-          !hasProduct[favItem.circleId] ) {
+      if (!favItem.productId) {
+        if (!foundCircle[favItem.circleId]) {
+          foundCircle[favItem.circleId] = true;
+          r.push(favItem);
+        }
+      }
+      else {
         r.push(favItem);
       }
       return r;

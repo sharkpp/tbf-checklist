@@ -163,16 +163,41 @@ code {
   top:  8px;
 }
 
-.fav-list .circle-space, .fav-list .circle-space > button {
+.fav-list .circle-space,
+.fav-list .circle-space > button {
   word-break: keep-all;
   white-space: nowrap;
+  font-size: 90%;
+}
+.fav-list th.circle-name {
+  word-break: keep-all;
   font-size: 90%;
 }
 .fav-list .circle-name {
   font-size: 90%;
 }
+.fav-list .product-circle-space {
+  color: transparent;
+  overflow: hidden;
+  word-break: keep-all;
+  white-space: nowrap;
+  font-size: 90%;
+}
+.fav-list .product-circle-name {
+  width: 1em;
+  max-width: 1em;
+  overflow: hidden;
+  word-break: keep-all;
+  white-space: nowrap;
+  color: transparent;
+}
 .fav-list .product-name {
   font-size: 90%;
+}
+.fav-list .circle-name > button,
+.fav-list .product-name > button {
+  font-size: 90%;
+  text-align: left;
 }
 .fav-list .product-price {
   word-break: keep-all;
