@@ -1,6 +1,7 @@
 "use struct";
 
 const EventEmitter = require('events');
+const { booth2order } = require('./Circle');
 
 const Endpoint = 'https://api-gw98.herokuapp.com/https://techbookfest.org/api';
 
@@ -201,18 +202,20 @@ export default class ProductModel {
     });
     favList = favList.sort((a, b) => {
       if (a.circleId !== b.circleId) {
-        return 0;
+        return booth2order(a.space) - booth2order(b.space);
       }
-      const seqA = a.seq||0;
-      const seqB = b.seq||0;
+      const seqA = a.seq||-1;
+      const seqB = b.seq||-1;
       return seqA - seqB;
     }).map((favItem) => {
       delete favItem.seq;
       return favItem;
     });
     // 足りないものを要求
-    Object.keys(reqList).forEach((circleId) => {
-      this.request({ circleId });
+    setTimeout(() => {
+      Object.keys(reqList).forEach((circleId) => {
+        this.request({ circleId });
+      });
     });
   }
 

@@ -10,7 +10,7 @@ const KeyLocalStorageOld = 'circle-cache';
 const KeyLocalStoragePrefix = 'c:';
 
 // 配置を順番に
-function booth2order(booth) {
+export function booth2order(booth) {
   const spaceToken = [].concat(BoothToken.exec(booth)||['','0','']).slice(1);
   const spaceCategory = spaceToken[0].codePointAt(0);
   return (
@@ -297,9 +297,11 @@ export default class CircleModel {
       return spaceOrderA - spaceOrderB;
     });
     // 足りないものを要求
-    Object.keys(reqList).forEach((circleId) => {
-      this.request({ circleId });
-    });
+    setTimeout(() => {
+      Object.keys(reqList).forEach((circleId) => {
+        this.request({ circleId });
+      });
+    }, 0);
   }
 
   // キャッシュを削除

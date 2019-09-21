@@ -66,7 +66,7 @@ function FavoriteListView({ history, models }) {
         <tbody>
           {favList.map((favItem, index) => {
             return (
-              <tr key={`fav-${favItem.circleId}-${favItem.productId|'circle'}`}>
+              <tr key={`fav-${favItem.circleId}-${favItem.productId||'circle'}`}>
                 <td className='circle-space' >
                   <Button variant="link" style={{ padding: 0 }} onClick={() => {
                     if (favItem.productId) {
@@ -89,7 +89,7 @@ function FavoriteListView({ history, models }) {
         <tfoot>
           <tr>
             <th className='circle-space' >合計</th>
-            <td colSpan={3} className='product-price' >{`${priceTotal.price} 円${priceTotal.withUnknown?' ※不明含む':''}`}</td>
+            <td colSpan={3} className='product-price' >{`${priceTotal.withUnknown?'※不明含む ':''}${priceTotal.price} 円`}</td>
           </tr>
         </tfoot>
       </Table>
