@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { ButtonToolbar, Button } from 'react-bootstrap';
-
 import { Table } from 'react-bootstrap';
 
 function FavoriteListView({ history, models }) {
@@ -61,7 +60,6 @@ function FavoriteListView({ history, models }) {
             <th className='circle-space'>配置</th>
             <th className='circle-name' colSpan={2}>サークル名/頒布物</th>
             <th className='product-price'>価格</th>
-            <th className='product-tags'>タグ</th>
           </tr>
         </thead>
         <tbody>
@@ -79,8 +77,6 @@ function FavoriteListView({ history, models }) {
                     </Button>
                   </td>
                   <td className='product-price' >
-                  </td>
-                  <td className='product-tags' >
                   </td>
                 </tr>
               : <tr key={`fav-${favItem.circleId}-${favItem.productId}`}>
@@ -100,9 +96,6 @@ function FavoriteListView({ history, models }) {
                   <td className='product-price' >
                     {undefined===favItem.productPrice?'':`${favItem.productPrice} 円`}
                   </td>
-                <td className='product-tags' >
-
-                </td>
               </tr>
             );
           })}
