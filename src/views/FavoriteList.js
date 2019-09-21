@@ -70,11 +70,12 @@ function FavoriteListView({ history, models }) {
                     {favItem.space||''}
                   </td>
                   <td className='circle-name' colSpan={2}>
-                    <Button variant="link" style={{ padding: 0 }} onClick={() => {
+                    <a style={{ padding: 0 }} href={`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}`} onClick={(e) => {
                       history.push(`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}`);
+                      e.preventDefault();
                     }} >
                       {favItem.circleName||''}
-                    </Button>
+                    </a>
                   </td>
                   <td className='product-price' >
                   </td>
@@ -87,11 +88,12 @@ function FavoriteListView({ history, models }) {
                     {favItem.circleName||''}
                   </td>
                   <td className='product-name'>
-                    <Button variant="link" style={{ padding: 0 }} onClick={() => {
+                    <a style={{ padding: 0 }} href={`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}/${favItem.productId}`} onClick={(e) => {
                       history.push(`/${favItem.eventId.replace(/^[a-z]+0*/, '')}/circle/${favItem.circleId}/${favItem.productId}`);
+                      e.preventDefault();
                     }} >
                       {favItem.productName||''}
-                    </Button>
+                    </a>
                   </td>
                   <td className='product-price' >
                     {undefined===favItem.productPrice?'':`${favItem.productPrice} 円`}
